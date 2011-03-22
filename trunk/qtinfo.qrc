@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Qt_info.html</file>
+        <file>end.png</file>
+    </qresource>
+</RCC>

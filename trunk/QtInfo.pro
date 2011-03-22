@@ -6,7 +6,6 @@
 
 QT       += core gui webkit opengl
 
-contains(QT_VERSION, ^4\\.[0-6]\\..*) symbian: QT -= opengl
 
 TARGET = QtInfo
 TEMPLATE = app
@@ -23,19 +22,17 @@ CONFIG += mobility
 MOBILITY = systeminfo
 
 symbian {
-
-OTHER_FILES += \
-    qtc_packaging/debian_fremantle/rules \
-    qtc_packaging/debian_fremantle/README \
-    qtc_packaging/debian_fremantle/copyright \
-    qtc_packaging/debian_fremantle/control \
-    qtc_packaging/debian_fremantle/compat \
-    qtc_packaging/debian_fremantle/changelog
+    contains(QT_VERSION, ^4\\.[0-6]\\..*): QT -= opengl
     TARGET.UID3 = 0xe4b20d40
     # TARGET.CAPABILITY += 
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 0x800000
 }
+
+#GITREV=$$system(git rev-parse HEAD)
+
+RESOURCES += \
+    qtinfo.qrc
 
 maemo5 {
     target.path = /opt/QtInfo/bin
