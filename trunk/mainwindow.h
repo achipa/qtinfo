@@ -20,6 +20,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    bool loadLib(QString libName);
+
 public slots:
     void on_closeButton_clicked(bool checked) { this->close(); }
     void on_emailButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl(QString("mailto:user@foo.com?subject=QtInfo&body=%0").arg(text))); }
@@ -29,6 +31,7 @@ public slots:
 #endif
     void on_jsbinButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl("http://jsbin.com")); }
     void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(text); }
+
 private:
     Ui::MainWindow *ui;
     QString html;

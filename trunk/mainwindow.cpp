@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
     out << key << ": " << value << endl;
 
+
     key = "Qt build";
     value = QLibraryInfo::buildDate().toString()+ ", " + QLibraryInfo::buildKey()  + ", " + QLibraryInfo::licensee();
     html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
@@ -91,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     value = "";
     QStringList qtlibs;
     QStringList qtmobilitylibs;
+
     qtlibs << "libQt3Support";
     qtlibs << "libQtBearer";
     qtlibs << "libQAxContainer";
@@ -116,6 +118,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qtlibs << "libQtWebKit";
     qtlibs << "libQtXmlPatterns";
     qtlibs << "libQtXml";
+
     qtmobilitylibs << "libQtConnectivity";
     qtmobilitylibs << "libQtContacts";
     qtmobilitylibs << "libQtFeedback";
@@ -131,21 +134,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qtlibs.append(qtmobilitylibs);
 
     foreach(QString libname, qtlibs) {
-        QLibrary lib(libname);
-//        qDebug() << lib.errorString();
-        if (!lib.load()) {
-            lib.setFileName(libname.replace("lib", ""));
-            lib.load();
-        }
-//        if (!lib.isLoaded()) {
-//            lib.setFileName(libname.replace("lib", "/usr/lib/lib"));
-//            lib.load();
-//        }
-//        if (!lib.isLoaded()) {
-//            lib.setFileName(libname.replace("lib", "/opt/qt4/lib/lib"));
-//            lib.load();
-//        }
-        if (lib.isLoaded()) {
+        if (loadLib(libname)) {
 //            if (qtmobilitylibs.contains(libname))
 //                ui->modules->setText(ui->modules->text() + " <i>" + libname.replace("lib", "") + "</i>");
 //            else
@@ -166,6 +155,17 @@ MainWindow::MainWindow(QWidget *parent) :
     html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
     out << key << ": " << value << endl;
 
+    key = "Qt Quick";
+    if (loadLib("QtDeclarative"))
+    {
+        value = "1.0";
+    }
+    else
+    {
+        value = "Not available";
+    }
+    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
+    out << key << ": " << value << endl;
 
     key = "OS / Firmware";
     value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
@@ -225,4 +225,36 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+bool MainWindow::loadLib(QString libname)
+{
+    QLibrary lib(libname);
+        qDebug() << lib.errorString();
+    if (!lib.load()) {
+        lib.setFileName(libname.replace("lib", ""));
+        int version = 1;
+        libname.append("1");
+        while (!lib.load() && version <= 9) {
+            QString str;
+            str.setNum(version);
+            lib.setFileName(libname.replace(libname.length()-1, 1, str));
+            version++;
+        }
+    }
+//        if (!lib.isLoaded()) {
+//            lib.setFileName(libname.replace("lib", "/usr/lib/lib"));
+//            lib.load();
+//        }
+//        if (!lib.isLoaded()) {
+//            lib.setFileName(libname.replace("lib", "/opt/qt4/lib/lib"));
+//            lib.load();
+//        }
+
+    bool loaded = lib.isLoaded();
+
+    qDebug() << libname << "loaded " << loaded;
+
+    if (loaded) lib.unload();
+    return loaded;
 }
