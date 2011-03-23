@@ -217,7 +217,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QTextStream sout(stdout);
     sout << text;
-#ifdef Q_WS_MAEMO_5
+#ifdef Q_WS_MAEMO_5 || Q_WS_SYMBIAN
     ui->closeButton->setVisible(false);
 #endif
 }

@@ -39,21 +39,21 @@
       <item>
        <widget class="QPushButton" name="jsbinButton">
         <property name="text">
-         <string>Publish to jsbin</string>
+         <string>To pastebin</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="saveButton">
         <property name="text">
-         <string>Save to file</string>
+         <string>To file</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="emailButton">
         <property name="text">
-         <string>Email</string>
+         <string>To email</string>
         </property>
        </widget>
       </item>
