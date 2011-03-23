@@ -92,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
     value = "";
     QStringList qtlibs;
     QStringList qtmobilitylibs;
+    QStringList installedlibs;
 
     qtlibs << "libQt3Support";
     qtlibs << "libQtBearer";
@@ -106,6 +107,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qtlibs << "libQtGui";
     qtlibs << "libQtHelp";
     qtlibs << "libQtMultimedia";
+    qtlibs << "libQtMaemo5";
     qtlibs << "libphonon";
     qtlibs << "libQtNetwork";
     qtlibs << "libQtOpenGL";
@@ -140,6 +142,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //            else
 //                ui->modules->setText(ui->modules->text() + " " + libname.replace("lib", ""));
             value += libname.replace("lib", "") + " ";
+            installedlibs << libname;
         }
     }
     html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
@@ -156,7 +159,7 @@ MainWindow::MainWindow(QWidget *parent) :
     out << key << ": " << value << endl;
 
     key = "Qt Quick";
-    if (loadLib("QtDeclarative"))
+    if (installedlibs.contains("libQtDeclarative"))
     {
         value = "1.0";
     }
@@ -217,7 +220,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QTextStream sout(stdout);
     sout << text;
-#ifdef Q_WS_MAEMO_5 || Q_WS_SYMBIAN
+#ifdef Q_WS_MAEMO_5
     ui->closeButton->setVisible(false);
 #endif
 }
@@ -232,25 +235,12 @@ bool MainWindow::loadLib(QString libname)
     QLibrary lib(libname);
 //        qDebug() << lib.errorString();
     if (!lib.load()) {
-        lib.setFileName(libname.replace("lib", ""));
-        int version = 1;
-        libname.append("1");
-        while (!lib.load() && version <= 9) {
-            QString str;
-            str.setNum(version);
-            lib.setFileName(libname.replace(libname.length()-1, 1, str));
-            version++;
+        libname = libname.replace("lib","");
+        foreach(QString version, QString("1,2,3,4,5,6,7,8,9").split(",")) {
+            lib.setFileName(libname.append(version));
+            if (lib.load()) break;
         }
     }
-//        if (!lib.isLoaded()) {
-//            lib.setFileName(libname.replace("lib", "/usr/lib/lib"));
-//            lib.load();
-//        }
-//        if (!lib.isLoaded()) {
-//            lib.setFileName(libname.replace("lib", "/opt/qt4/lib/lib"));
-//            lib.load();
-//        }
-
     bool loaded = lib.isLoaded();
 
 //    qDebug() << libname << "loaded " << loaded;
