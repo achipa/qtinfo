@@ -230,7 +230,7 @@ MainWindow::~MainWindow()
 bool MainWindow::loadLib(QString libname)
 {
     QLibrary lib(libname);
-        qDebug() << lib.errorString();
+//        qDebug() << lib.errorString();
     if (!lib.load()) {
         lib.setFileName(libname.replace("lib", ""));
         int version = 1;
@@ -253,7 +253,7 @@ bool MainWindow::loadLib(QString libname)
 
     bool loaded = lib.isLoaded();
 
-    qDebug() << libname << "loaded " << loaded;
+//    qDebug() << libname << "loaded " << loaded;
 
     if (loaded) lib.unload();
     return loaded;
