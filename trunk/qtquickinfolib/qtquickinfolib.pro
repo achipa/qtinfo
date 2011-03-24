@@ -12,3 +12,8 @@ QT += core gui declarative
 # Input
 HEADERS += qtquickinfo.h
 SOURCES += qtquickinfo.cpp
+
+maemo5 {
+    target.path = /opt/qtinfo/bin
+    INSTALLS += target
+}

@@ -7,7 +7,7 @@
 QT       += core gui webkit opengl
 
 
-TARGET = QtInfo
+TARGET = qtinfo
 TEMPLATE = app
 
 
@@ -35,6 +35,6 @@ RESOURCES += \
     qtinfo.qrc
 
 maemo5 {
-    target.path = /opt/QtInfo/bin
+    target.path = /opt/qtinfo/bin
     INSTALLS += target
 }
