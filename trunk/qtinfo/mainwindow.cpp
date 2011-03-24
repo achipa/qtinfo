@@ -158,10 +158,14 @@ MainWindow::MainWindow(QWidget *parent) :
     html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
     out << key << ": " << value << endl;
 
-    key = "Qt Quick";
-    if (installedlibs.contains("libQtDeclarative"))
+    key = "Qt Quick version";
+    if (installedlibs.contains("QtDeclarative"))
     {
-        value = "1.0";
+        typedef QString (*fn)();
+        fn v = (fn) QLibrary::resolve("qtquickinfolib", "getInfo");
+        if (v) {
+            value = v();
+        }
     }
     else
     {
@@ -236,8 +240,9 @@ bool MainWindow::loadLib(QString libname)
 //        qDebug() << lib.errorString();
     if (!lib.load()) {
         libname = libname.replace("lib","");
+        libname.append("0");
         foreach(QString version, QString("1,2,3,4,5,6,7,8,9").split(",")) {
-            lib.setFileName(libname.append(version));
+            lib.setFileName(libname.replace(libname.length()-1,1,version));
             if (lib.load()) break;
         }
     }
