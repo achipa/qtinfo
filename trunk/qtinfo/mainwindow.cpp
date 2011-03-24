@@ -94,49 +94,50 @@ MainWindow::MainWindow(QWidget *parent) :
     QStringList qtmobilitylibs;
     QStringList installedlibs;
 
-    qtlibs << "libQt3Support";
-    qtlibs << "libQtBearer";
-    qtlibs << "libQAxContainer";
-    qtlibs << "libQAxServer";
-    qtlibs << "libQtCLucene";
-    qtlibs << "libQtCore";
-    qtlibs << "libQtDBus";
-    qtlibs << "libQtDeclarative";
-    qtlibs << "libQtDesignerComponents";
-    qtlibs << "libQtDesigner";
-    qtlibs << "libQtGui";
-    qtlibs << "libQtHelp";
-    qtlibs << "libQtMultimedia";
-    qtlibs << "libQtMaemo5";
-    qtlibs << "libphonon";
-    qtlibs << "libQtNetwork";
-    qtlibs << "libQtOpenGL";
-    qtlibs << "libQtScript";
-    qtlibs << "libQtScriptTools";
-    qtlibs << "libQtSql";
-    qtlibs << "libQtSvg";
-    qtlibs << "libQtTest";
-    qtlibs << "libQtUiTools";
-    qtlibs << "libQtWebKit";
-    qtlibs << "libQtXmlPatterns";
-    qtlibs << "libQtXml";
+    qtlibs << "Qt3Support";
+    qtlibs << "QtBearer";
+    qtlibs << "QAxContainer";
+    qtlibs << "QAxServer";
+    qtlibs << "QtCLucene";
+    qtlibs << "QtCore";
+    qtlibs << "QtDBus";
+    qtlibs << "QtDeclarative";
+    qtlibs << "QtDesignerComponents";
+    qtlibs << "QtDesigner";
+    qtlibs << "QtGui";
+    qtlibs << "QtHelp";
+    qtlibs << "QtMultimedia";
+    qtlibs << "QtMaemo5";
+    qtlibs << "phonon";
+    qtlibs << "QtNetwork";
+    qtlibs << "QtOpenGL";
+    qtlibs << "QtScript";
+    qtlibs << "QtScriptTools";
+    qtlibs << "QtSql";
+    qtlibs << "QtSvg";
+    qtlibs << "QtTest";
+    qtlibs << "QtUiTools";
+    qtlibs << "QtWebKit";
+    qtlibs << "QtXmlPatterns";
+    qtlibs << "QtXml";
 
-    qtmobilitylibs << "libQtConnectivity";
-    qtmobilitylibs << "libQtContacts";
-    qtmobilitylibs << "libQtFeedback";
-    qtmobilitylibs << "libQtGallery";
-    qtmobilitylibs << "libQtLocation";
-    qtmobilitylibs << "libQtMultimediaKit";
-    qtmobilitylibs << "libQtServiceFramework";
-    qtmobilitylibs << "libQtSystemInfo";
-    qtmobilitylibs << "libQtOrganizer";
-    qtmobilitylibs << "libQtPublishSubscribe";
-    qtmobilitylibs << "libQtVersitOrganizer";
-    qtmobilitylibs << "libQtVersit";
+    qtmobilitylibs << "QtConnectivity";
+    qtmobilitylibs << "QtContacts";
+    qtmobilitylibs << "QtFeedback";
+    qtmobilitylibs << "QtGallery";
+    qtmobilitylibs << "QtLocation";
+    qtmobilitylibs << "QtMultimediaKit";
+    qtmobilitylibs << "QtSensors";
+    qtmobilitylibs << "QtServiceFramework";
+    qtmobilitylibs << "QtSystemInfo";
+    qtmobilitylibs << "QtOrganizer";
+    qtmobilitylibs << "QtPublishSubscribe";
+    qtmobilitylibs << "QtVersitOrganizer";
+    qtmobilitylibs << "QtVersit";
     qtlibs.append(qtmobilitylibs);
 
     foreach(QString libname, qtlibs) {
-        if (loadLib(libname)) {
+        if (!loadLib(libname).isEmpty()) {
 //            if (qtmobilitylibs.contains(libname))
 //                ui->modules->setText(ui->modules->text() + " <i>" + libname.replace("lib", "") + "</i>");
 //            else
@@ -159,18 +160,21 @@ MainWindow::MainWindow(QWidget *parent) :
     out << key << ": " << value << endl;
 
     key = "Qt Quick version";
+    value = "";
     if (installedlibs.contains("QtDeclarative"))
     {
-        typedef QString (*fn)();
-        fn v = (fn) QLibrary::resolve("qtquickinfolib", "getInfo");
-        if (v) {
-            value = v();
+        QString libname(loadLib("./qtquickinfolib")); // hmm... might need to include ./ as one of the possible prefixes ?
+//        QString libname(loadLib("qtquickinfolib"));
+        qDebug() << libname;
+        if (!libname.isEmpty()) {
+            typedef QString (*fn)();
+            fn v = (fn) QLibrary::resolve(libname, "getInfo");
+            if (v) {
+                value = v();
+            }
         }
     }
-    else
-    {
-        value = "Not available";
-    }
+    if (value.isEmpty()) value = "Not available";
     html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
     out << key << ": " << value << endl;
 
@@ -234,22 +238,28 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-bool MainWindow::loadLib(QString libname)
+QString MainWindow::loadLib(QString libname)
 {
     QLibrary lib(libname);
-//        qDebug() << lib.errorString();
+//    qDebug() << lib.errorString();
     if (!lib.load()) {
-        libname = libname.replace("lib","");
-        libname.append("0");
-        foreach(QString version, QString("1,2,3,4,5,6,7,8,9").split(",")) {
-            lib.setFileName(libname.replace(libname.length()-1,1,version));
-            if (lib.load()) break;
+        foreach (QString prefix, QStringList() << "" << "lib") {
+            foreach(QString version, QStringList() << "" << "1" << "2" << "3" << "4" << "5") {
+                lib.setFileNameAndVersion(prefix + libname, version.toInt()); // Linux naming
+                if (lib.load()) break;
+                lib.setFileName(prefix + libname + version); // Windows and Symbian naming
+                if (lib.load()) break;
+                }
         }
     }
     bool loaded = lib.isLoaded();
 
 //    qDebug() << libname << "loaded " << loaded;
 
-    if (loaded) lib.unload();
-    return loaded;
+    if (loaded) {
+        lib.unload();
+        return lib.fileName();
+    } else {
+        return QString();
+    }
 }

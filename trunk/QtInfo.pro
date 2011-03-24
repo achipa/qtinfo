@@ -16,7 +16,6 @@ OTHER_FILES += \
     qtc_packaging/debian_fremantle/compat \
     qtc_packaging/debian_fremantle/changelog
 
-
 maemo5 {
     target.path = /opt/qtinfo/bin
     INSTALLS += target

@@ -20,7 +20,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    bool loadLib(QString libName);
+    QString loadLib(QString libName);
 
 public slots:
     void on_closeButton_clicked(bool checked) { this->close(); }
@@ -29,7 +29,7 @@ public slots:
 //    void on_mailButton_clicked(bool checked) { QDBusInterface browser("com.nokia.modest", "/com/nokia/modest", "com.nokia.modest")  ; browser.call("MailTo", "");}
     void on_saveButton_clicked(bool checked) { QFile outfile("/home/user/MyDocs/qtinfo.html"); outfile.open(QIODevice::WriteOnly); outfile.write(html.toAscii()); outfile.close();  }
 #endif
-    void on_jsbinButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl("http://jsbin.com")); }
+    void on_jsbinButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl("http://pastebin.com")); }
     void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(text); }
 
 private:

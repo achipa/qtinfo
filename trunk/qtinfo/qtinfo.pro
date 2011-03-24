@@ -29,7 +29,8 @@ symbian {
     TARGET.EPOCHEAPSIZE = 0x020000 0x800000
 }
 
-#GITREV=$$system(git rev-parse HEAD)
+contains(QMAKE_HOST.os, Linux): GITREV=$$system(git rev-parse HEAD)
+message($$GITREV)
 
 RESOURCES += \
     qtinfo.qrc
