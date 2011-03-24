@@ -167,16 +167,24 @@ MainWindow::MainWindow(QWidget *parent) :
 //        QString libname(loadLib("qtquickinfolib"));
         qDebug() << libname;
         if (!libname.isEmpty()) {
-            typedef QString (*fn)();
+            typedef QMap<QString, QString> (*fn)();
             fn v = (fn) QLibrary::resolve(libname, "getInfo");
             if (v) {
-                value = v();
+                QMap<QString, QString> map = v();
+                foreach(QString key, map.keys()) {
+                    if (key == "section") continue; // will make it pretty when I get the HTML template
+                    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(map[key]));
+                    out << key << ": " << value << endl;
+                    value = "OK";
+                }
             }
         }
     }
-    if (value.isEmpty()) value = "Not available";
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    if (value.isEmpty()) {
+        value = "Not available";
+        html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
+        out << key << ": " << value << endl;
+    }
 
     key = "OS / Firmware";
     value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);

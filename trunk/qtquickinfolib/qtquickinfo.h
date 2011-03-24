@@ -1,9 +1,9 @@
 #ifndef QTQUICKINFO_H
 #define QTQUICKINFO_H
 
-#include <QString>
+#include <QMap>
 
 extern "C" {
-QString getInfo();
+QMap<QString, QString> getInfo();
 }
 #endif
