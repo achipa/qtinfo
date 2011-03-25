@@ -7,6 +7,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QFile>
 #include <QtGui/QApplication>
+#include <QTextStream>
 
 namespace Ui {
     class MainWindow;
@@ -21,6 +22,7 @@ public:
     ~MainWindow();
 
     QString loadLib(QString libName);
+    bool getData(QTextStream& out, QString library, QString defaultKey, const char* function);
 
 public slots:
     void on_closeButton_clicked(bool checked) { this->close(); }
@@ -36,6 +38,7 @@ private:
     Ui::MainWindow *ui;
     QString html;
     QString text;
+    QString rowstr;
 };
 
 #endif // MAINWINDOW_H

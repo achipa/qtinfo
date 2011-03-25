@@ -2,10 +2,10 @@
 #include <QtDeclarative>
 #include <QStringList>
 
-QMap<QString, QString> getInfo()
+QList<QPair<QString, QString> > qtQuickInfo()
 {
-    QMap<QString, QString> map;
-    map.insert("section", "QtQuick");
+    QList<QPair<QString, QString> > info;
+    info.append(QPair<QString,QString>("section", "Qt Quick"));
 
     QDeclarativeEngine engine;
     QStringList importPaths = engine.importPathList();
@@ -14,7 +14,9 @@ QMap<QString, QString> getInfo()
     {
         list.append(path + " ");
     }
-    map.insert("Import paths", list);
 
-    return map;
+    info.append(QPair<QString,QString>("Qt Quick version", "1.0"));
+    info.append(QPair<QString,QString>("Qt Quick import path", list));
+
+    return info;
 }

@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QFile htmlfile("://Qt_info.html");
     htmlfile.open(QIODevice::ReadOnly);
     html = htmlfile.readAll();
-    QString rowstr = "\
+    rowstr = "\
             <tr> \
               <td class=\"info\"><strong>%0</strong></td> \
               <td>%1</td> \
@@ -159,31 +159,16 @@ MainWindow::MainWindow(QWidget *parent) :
     html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
     out << key << ": " << value << endl;
 
-    key = "Qt Quick version";
+    key = "Qt Quick";
     value = "";
     if (installedlibs.contains("QtDeclarative"))
     {
         QString libname(loadLib("./qtquickinfolib")); // hmm... might need to include ./ as one of the possible prefixes ?
-//        QString libname(loadLib("qtquickinfolib"));
-        qDebug() << libname;
-        if (!libname.isEmpty()) {
-            typedef QMap<QString, QString> (*fn)();
-            fn v = (fn) QLibrary::resolve(libname, "getInfo");
-            if (v) {
-                QMap<QString, QString> map = v();
-                foreach(QString key, map.keys()) {
-                    if (key == "section") continue; // will make it pretty when I get the HTML template
-                    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(map[key]));
-                    out << key << ": " << value << endl;
-                    value = "OK";
-                }
-            }
+
+        if (!libname.isEmpty())
+        {
+            getData(out, libname, key, "qtQuickInfo");
         }
-    }
-    if (value.isEmpty()) {
-        value = "Not available";
-        html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-        out << key << ": " << value << endl;
     }
 
     key = "OS / Firmware";
@@ -246,6 +231,32 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+bool MainWindow::getData(QTextStream& out, QString library, QString defaultKey, const char* function)
+{
+    QString value = "";
+    QString key = defaultKey;
+    typedef QList<QPair<QString, QString> > (*fn)();
+    fn v = (fn) QLibrary::resolve(library, function);
+    if (v) {
+        QList<QPair<QString, QString> > list = v();
+
+        for (int i = 0; i < list.length(); i++)
+        {
+            QPair<QString, QString> key = list.at(i);
+            if (key.first == "section") continue; // will make it pretty when I get the HTML template
+            html = html.replace("__TEMPLATE__", rowstr.arg(key.first).arg(key.second));
+            out << key.first << ": " << value << endl;
+            value = "OK";
+        }
+    }
+
+    if (value.isEmpty()) {
+        value = "Not available";
+        html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
+        out << key << ": " << value << endl;
+    }
+}
+
 QString MainWindow::loadLib(QString libname)
 {
     QLibrary lib(libname);
@@ -258,11 +269,12 @@ QString MainWindow::loadLib(QString libname)
                 lib.setFileName(prefix + libname + version); // Windows and Symbian naming
                 if (lib.load()) break;
                 }
+            if (lib.isLoaded()) break;
         }
     }
     bool loaded = lib.isLoaded();
 
-//    qDebug() << libname << "loaded " << loaded;
+    qDebug() << libname << "loaded " << loaded;
 
     if (loaded) {
         lib.unload();

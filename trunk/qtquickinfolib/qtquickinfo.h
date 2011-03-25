@@ -1,9 +1,11 @@
 #ifndef QTQUICKINFO_H
 #define QTQUICKINFO_H
 
-#include <QMap>
+#include <QList>
+#include <QPair>
+#include <QString>
 
 extern "C" {
-QMap<QString, QString> getInfo();
+QList<QPair<QString, QString> > qtQuickInfo();
 }
 #endif
