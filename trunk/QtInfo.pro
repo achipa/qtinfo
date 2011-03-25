@@ -4,9 +4,11 @@ CONFIG += ordered
 
 # The actual projects
 SUBDIRS = qtquickinfolib \
+          glinfolib \
+          webkitinfolib \
           qtinfo
 
-qtinfo.depends = qtquickinfolib
+qtinfo.depends = qtquickinfolib glinfolib webkitinfolib
 
 OTHER_FILES += \
     qtc_packaging/debian_fremantle/rules \

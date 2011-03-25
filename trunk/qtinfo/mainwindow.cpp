@@ -11,10 +11,6 @@
 #include <QTextStream>
 #include <QDesktopServices>
 
-#ifdef QT_OPENGL_LIB
-#include <QGLFormat>
-#endif
-
 QTM_USE_NAMESPACE
 
 #define ROWTEMPLATE "\n\
@@ -53,38 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
     key = "Qt build";
     value = QLibraryInfo::buildDate().toString()+ ", " + QLibraryInfo::buildKey()  + ", " + QLibraryInfo::licensee();
     addToTemplate(key, value);
-/*
-    key = "Webkit";
-    value = qWebKitVersion() + " (SSL: " + (QSslSocket::supportsSsl() ? "Yes)" : "No)");
-    addToTemplate(key, value);
-*/
-#ifdef QT_OPENGL_LIB
-    key = "OpenGL";
-    value = "";
-    if (QGLFormat::hasOpenGL()) {
-        int flags = QGLFormat::openGLVersionFlags ();
-        if (flags & QGLFormat::OpenGL_Version_4_0) value = "OpenGL 4.0";
-        else if (flags & QGLFormat::OpenGL_Version_3_3) value = "OpenGL 3.3";
-        else if (flags & QGLFormat::OpenGL_Version_3_2) value = "OpenGL 3.2";
-        else if (flags & QGLFormat::OpenGL_Version_3_1) value = "OpenGL 3.1";
-        else if (flags & QGLFormat::OpenGL_Version_3_0) value = "OpenGL 3.0";
-        else if (flags & QGLFormat::OpenGL_Version_2_1) value = "OpenGL 2.1";
-        else if (flags & QGLFormat::OpenGL_Version_2_0) value = "OpenGL 2.0";
-        else if (flags & QGLFormat::OpenGL_Version_1_5) value = "OpenGL 1.5";
-        else if (flags & QGLFormat::OpenGL_Version_1_4) value = "OpenGL 1.4";
-        else if (flags & QGLFormat::OpenGL_Version_1_3) value = "OpenGL 1.3";
-        else if (flags & QGLFormat::OpenGL_Version_1_2) value = "OpenGL 1.2";
-        else if (flags & QGLFormat::OpenGL_Version_1_1) value = "OpenGL 1.1";
-        if (flags & QGLFormat::OpenGL_ES_CommonLite_Version_1_0) value += " OpenGL ES 1.0 Common Lite";
-        else if (flags & QGLFormat::OpenGL_ES_Common_Version_1_0) value += " OpenGL ES 1.0 Common";
-        else if (flags & QGLFormat::OpenGL_ES_CommonLite_Version_1_1) value += " OpenGL ES 1.1 Common Lite";
-        else if (flags & QGLFormat::OpenGL_ES_Common_Version_1_1) value += " OpenGL ES 1.1 Common";
-        else if (flags & QGLFormat::OpenGL_ES_Version_2_0) value += " OpenGL ES 2.0";
-    } else {
-        value = "No";
-    }
-    addToTemplate(key, value);
-#endif
 
     key = "Country";
     QLocale defaultlocale;
@@ -154,6 +118,30 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     }
     addToTemplate(key, value);
+
+    key = "OpenGL";
+    value = "";
+    if (installedlibs.contains("QtOpenGL"))
+    {
+        QString libname(loadLib("./glinfolib")); // hmm... might need to include ./ as one of the possible prefixes ?
+
+        if (!libname.isEmpty())
+        {
+            loadValues(out, libname, key, "GLInfo");
+        }
+    }
+
+    key = "WebKit";
+    value = "";
+    if (installedlibs.contains("QtWebKit"))
+    {
+        QString libname(loadLib("./webkitinfolib")); // hmm... might need to include ./ as one of the possible prefixes ?
+
+        if (!libname.isEmpty())
+        {
+            loadValues(out, libname, key, "webkitInfo");
+        }
+    }
 
     key = "Mobility version";
     QSystemInfo si;

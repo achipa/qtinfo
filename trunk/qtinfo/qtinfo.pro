@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui opengl
+QT       += core gui
 
 
 TARGET = qtinfo
@@ -22,7 +22,6 @@ CONFIG += mobility
 MOBILITY = systeminfo
 
 symbian {
-    contains(QT_VERSION, ^4\\.[0-6]\\..*): QT -= opengl
     TARGET.UID3 = 0xe4b20d40
     TARGET.CAPABILITY += LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCSTACKSIZE = 0x14000
