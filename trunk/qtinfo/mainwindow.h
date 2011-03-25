@@ -22,7 +22,7 @@ public:
     ~MainWindow();
 
     QString loadLib(QString libName);
-    bool getData(QTextStream& out, QString library, QString defaultKey, const char* function);
+    bool loadValues(QTextStream& out, QString library, QString defaultKey, const char* function);
 
 public slots:
     void on_closeButton_clicked(bool checked) { this->close(); }
@@ -35,10 +35,14 @@ public slots:
     void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(text); }
 
 private:
+    void addToTemplate(QString key, QString value);
+    void addToTemplate(QList<QPair<QString, QString> > list);
     Ui::MainWindow *ui;
     QString html;
     QString text;
     QString rowstr;
+    QString sectionstr;
+    QTextStream out;
 };
 
 #endif // MAINWINDOW_H

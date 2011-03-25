@@ -6,7 +6,7 @@
 #include <QSystemInfo>
 #include <QLocale>
 #include <QDebug>
-#include <QtWebKit>
+//#include <QtWebKit>
 #include <QSslSocket>
 #include <QTextStream>
 #include <QDesktopServices>
@@ -17,37 +17,47 @@
 
 QTM_USE_NAMESPACE
 
+#define ROWTEMPLATE "\n\
+            <tr>\n\
+              <td class=\"info\"><strong>%0</strong></td>\n\
+              <td>%1</td>\n\
+            </tr>%2"
+
+#define SECTIONTEMPLATE "\n\
+    <h3>%0</h3>\n\
+    <table cellpadding=\"5\" width=\"100%\">\n\
+    __SECTIONROWTEMPLATE__\
+    </table>\n\
+    __SECTIONTEMPLATE__"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    rowstr(ROWTEMPLATE),
+    sectionstr(SECTIONTEMPLATE),
+    out(&text)
 {
     ui->setupUi(this);
-    QTextStream out( &text ) ;
     QFile htmlfile("://Qt_info.html");
     htmlfile.open(QIODevice::ReadOnly);
     html = htmlfile.readAll();
-    rowstr = "\
-            <tr> \
-              <td class=\"info\"><strong>%0</strong></td> \
-              <td>%1</td> \
-            </tr>__TEMPLATE__";
+//    QString loadinghtml = html;
+//    loadinghtml.replace("__SECTIONTEMPLATE__", "Please wait, reading data");
+//    ui->webView->setHtml(loadinghtml,QUrl("qrc:/"));
 
     QString key = "Qt version";
     QString value = qVersion();
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
 
     key = "Qt build";
     value = QLibraryInfo::buildDate().toString()+ ", " + QLibraryInfo::buildKey()  + ", " + QLibraryInfo::licensee();
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
-
+    addToTemplate(key, value);
+/*
     key = "Webkit";
     value = qWebKitVersion() + " (SSL: " + (QSslSocket::supportsSsl() ? "Yes)" : "No)");
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
-
+    addToTemplate(key, value);
+*/
 #ifdef QT_OPENGL_LIB
     key = "OpenGL";
     value = "";
@@ -73,20 +83,17 @@ MainWindow::MainWindow(QWidget *parent) :
     } else {
         value = "No";
     }
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 #endif
 
     key = "Country";
     QLocale defaultlocale;
     value = QLocale::countryToString(defaultlocale.country());
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
     key = "Language";
     value = QLocale::languageToString(defaultlocale.language()) + " (" + defaultlocale.name() + ")";
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
     key = "Qt modules";
     value = "";
@@ -146,8 +153,7 @@ MainWindow::MainWindow(QWidget *parent) :
             installedlibs << libname;
         }
     }
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
     key = "Mobility version";
     QSystemInfo si;
@@ -156,8 +162,7 @@ MainWindow::MainWindow(QWidget *parent) :
         value = "1.0.x";
     else
         value = si.version((QSystemInfo::Version)4);
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
     key = "Qt Quick";
     value = "";
@@ -167,14 +172,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
         if (!libname.isEmpty())
         {
-            getData(out, libname, key, "qtQuickInfo");
+            loadValues(out, libname, key, "qtQuickInfo");
         }
     }
 
     key = "OS / Firmware";
     value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
 
 /*    if (true || presentqtlibs.contains("libQtSystemInfo")) { // have mobility, yay !
@@ -193,18 +197,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     key = "Library path";
     value = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
     key = "Plugin path";
     value = QLibraryInfo::location(QLibraryInfo::PluginsPath);
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
     key = "Import path";
     value = QLibraryInfo::location((QLibraryInfo::LibraryLocation)11); // QLibraryInfo::ImportsPath == 11, but not available in Qt4.6
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
     key = "Image formats";
     value = "";
@@ -213,11 +214,12 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         value += fmtstr + ", ";
     }
-    html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-    out << key << ": " << value << endl;
+    addToTemplate(key, value);
 
-    html = html.replace("__TEMPLATE__", "");
-    ui->webView->setHtml(html,QUrl("qrc:/"));
+    html = html.replace("__ROWTEMPLATE__", "");
+    html = html.replace("__SECTIONTEMPLATE__", "");
+    ui->textBrowser->setHtml(html);
+//    ui->webView->setHtml(html,QUrl("qrc:/"));
 
     QTextStream sout(stdout);
     sout << text;
@@ -231,30 +233,47 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-bool MainWindow::getData(QTextStream& out, QString library, QString defaultKey, const char* function)
+bool MainWindow::loadValues(QTextStream& out, QString library, QString defaultKey, const char* function)
 {
-    QString value = "";
     QString key = defaultKey;
     typedef QList<QPair<QString, QString> > (*fn)();
     fn v = (fn) QLibrary::resolve(library, function);
     if (v) {
         QList<QPair<QString, QString> > list = v();
+        addToTemplate(list);
+    } else {
+        addToTemplate(key, "Not Available");
+    }
+}
 
-        for (int i = 0; i < list.length(); i++)
-        {
-            QPair<QString, QString> key = list.at(i);
-            if (key.first == "section") continue; // will make it pretty when I get the HTML template
-            html = html.replace("__TEMPLATE__", rowstr.arg(key.first).arg(key.second));
-            out << key.first << ": " << value << endl;
-            value = "OK";
+void MainWindow::addToTemplate(QString key, QString value)
+{
+    html = html.replace("__ROWTEMPLATE__", rowstr.arg(key).arg(value).arg("__ROWTEMPLATE__"));
+    out << key << ": " << value << endl;
+}
+
+void MainWindow::addToTemplate(QList<QPair<QString, QString> > list)
+{
+    bool insection = false;
+    for (int i = 0; i < list.length(); i++)
+    {
+        QPair<QString, QString> key = list.at(i);
+        if (key.first == "section") {
+            insection = true;
+            html = html.replace("__SECTIONROWTEMPLATE__", ""); // close off any previous open sections we might have
+            html = html.replace("__SECTIONTEMPLATE__", sectionstr.arg(key.second));
+            out << endl << key.second << endl << endl;
+        } else {
+            if (insection) {
+                html = html.replace("__SECTIONROWTEMPLATE__", rowstr.arg(key.first).arg(key.second).arg("__SECTIONROWTEMPLATE__"));
+            } else {
+                html = html.replace("__ROWTEMPLATE__", rowstr.arg(key.first).arg(key.second).arg("__ROWTEMPLATE__"));
+            }
+            out << " " << key.first << ": " << key.second << endl;
         }
     }
-
-    if (value.isEmpty()) {
-        value = "Not available";
-        html = html.replace("__TEMPLATE__", rowstr.arg(key).arg(value));
-        out << key << ": " << value << endl;
-    }
+    html = html.replace("__SECTIONROWTEMPLATE__", ""); // close off any previous open sections we might have
+    out << endl;
 }
 
 QString MainWindow::loadLib(QString libname)
