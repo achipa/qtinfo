@@ -20,7 +20,7 @@ symbian {
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE2DBBFFE
-    TARGET.CAPABILITY =
+    TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCALLOWDLLDATA = 1
     addFiles.sources = webkitinfolib.dll
     addFiles.path = !:/sys/bin
