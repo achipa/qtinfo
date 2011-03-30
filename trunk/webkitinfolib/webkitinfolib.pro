@@ -7,7 +7,7 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 
-QT += core gui webkit
+QT += core gui webkit network
 
 # Input
 HEADERS += webkitinfo.h

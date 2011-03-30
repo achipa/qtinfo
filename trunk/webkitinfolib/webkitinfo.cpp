@@ -1,6 +1,7 @@
 #include "webkitinfo.h"
 #include <QtWebKit>
 #include <QStringList>
+#include <QSslSocket>
 
 QList<QPair<QString, QString> > webkitInfo()
 {
