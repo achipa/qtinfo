@@ -15,6 +15,18 @@ SOURCES += glinfo.cpp
 
 symbian {
     contains(QT_VERSION, ^4\\.[0-6]\\..*): QT -= opengl
+
+    #Build STDDLL
+    CONFIG += stdbinary
+
+    #Symbian specific definitions
+    MMP_RULES += EXPORTUNFROZEN
+    TARGET.UID3 = 0xE2D94F71
+    TARGET.CAPABILITY =
+    TARGET.EPOCALLOWDLLDATA = 1
+    addFiles.sources = glinfolib.dll
+    addFiles.path = !:/sys/bin
+    DEPLOYMENT += addFiles
 }
 
 maemo5 {

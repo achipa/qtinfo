@@ -13,6 +13,20 @@ QT += core gui declarative
 HEADERS += qtquickinfo.h
 SOURCES += qtquickinfo.cpp
 
+symbian {
+    #Build STDDLL
+    CONFIG += stdbinary
+
+    #Symbian specific definitions
+    MMP_RULES += EXPORTUNFROZEN
+    TARGET.UID3 = 0xE19D73D4
+    TARGET.CAPABILITY =
+    TARGET.EPOCALLOWDLLDATA = 1
+    addFiles.sources = qtquickinfolib.dll
+    addFiles.path = !:/sys/bin
+    DEPLOYMENT += addFiles
+}
+
 maemo5 {
     target.path = /opt/qtinfo/bin
     INSTALLS += target

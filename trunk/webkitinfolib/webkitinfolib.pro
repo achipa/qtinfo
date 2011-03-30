@@ -13,6 +13,19 @@ QT += core gui webkit
 HEADERS += webkitinfo.h
 SOURCES += webkitinfo.cpp
 
+symbian {
+    #Build STDDLL
+    CONFIG += stdbinary
+
+    #Symbian specific definitions
+    MMP_RULES += EXPORTUNFROZEN
+    TARGET.UID3 = 0xE2DBBFFE
+    TARGET.CAPABILITY =
+    TARGET.EPOCALLOWDLLDATA = 1
+    addFiles.sources = webkitinfolib.dll
+    addFiles.path = !:/sys/bin
+    DEPLOYMENT += addFiles
+}
 maemo5 {
     target.path = /opt/qtinfo/bin
     INSTALLS += target
