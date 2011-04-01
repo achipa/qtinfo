@@ -18,12 +18,12 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-CONFIG += mobility
-MOBILITY = systeminfo
+#CONFIG += mobility
+#MOBILITY = systeminfo
 
 symbian {
     TARGET.UID3 = 0xe4b20d40
-    TARGET.CAPABILITY += LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
+    TARGET.CAPABILITY += LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData # WriteDeviceData ReadDeviceData ?
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 0x800000
 }

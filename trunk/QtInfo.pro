@@ -6,9 +6,10 @@ CONFIG += ordered
 SUBDIRS = qtquickinfolib \
           glinfolib \
           webkitinfolib \
-          qtinfo
+          multimediainfolib \
+          qtinfo 
 
-qtinfo.depends = qtquickinfolib glinfolib webkitinfolib
+qtinfo.depends = qtquickinfolib glinfolib webkitinfolib multimediainfolib
 
 OTHER_FILES += \
     qtc_packaging/debian_fremantle/rules \

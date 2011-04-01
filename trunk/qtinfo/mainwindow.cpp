@@ -3,15 +3,15 @@
 #include <QLibrary>
 #include <QLibraryInfo>
 #include <QImageReader>
-#include <QSystemInfo>
+//#include <QSystemInfo>
 #include <QLocale>
 #include <QDebug>
 //#include <QtWebKit>
-#include <QSslSocket>
+//#include <QSslSocket>
 #include <QTextStream>
 #include <QDesktopServices>
 
-QTM_USE_NAMESPACE
+//QTM_USE_NAMESPACE
 
 #define ROWTEMPLATE "\n\
             <tr>\n\
@@ -43,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QString key = "Qt version";
     QString value = qVersion();
+    QStringList valuelist;
+
     addToTemplate(key, value);
 
 
@@ -63,7 +65,6 @@ MainWindow::MainWindow(QWidget *parent) :
     value = "";
     QStringList qtlibs;
     QStringList qtmobilitylibs;
-    QStringList installedlibs;
 
     qtlibs << "Qt3Support";
     qtlibs << "QtBearer";
@@ -119,54 +120,26 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     addToTemplate(key, value);
 
-    key = "OpenGL";
-    value = "";
-    if (installedlibs.contains("QtOpenGL"))
-    {
-        QString libname(loadLib("./glinfolib")); // hmm... might need to include ./ as one of the possible prefixes ?
+    loadInfo("OpenGL", "QtOpenGL", "./glinfolib", "GLInfo");
 
-        if (!libname.isEmpty())
-        {
-            loadValues(out, libname, key, "GLInfo");
-        }
-    }
+    loadInfo("WebKit", "QtWebKit", "./webinfolib", "webkitInfo");
 
-    key = "WebKit";
-    value = "";
-    if (installedlibs.contains("QtWebKit"))
-    {
-        QString libname(loadLib("./webkitinfolib")); // hmm... might need to include ./ as one of the possible prefixes ?
+    loadInfo("MultimediaKit", "QtMultimediaKit", "./multimediainfolib", "multimediaInfo");
 
-        if (!libname.isEmpty())
-        {
-            loadValues(out, libname, key, "webkitInfo");
-        }
-    }
+    loadInfo("Qt Quick", "QtDeclarative", "./qtquickinfolib", "qtQuickInfo");
 
-    key = "Mobility version";
-    QSystemInfo si;
-    QString mobilityver = si.version((QSystemInfo::Version)4);
-    if (mobilityver.isEmpty() || mobilityver == "Not Available")
-        value = "1.0.x";
-    else
-        value = si.version((QSystemInfo::Version)4);
-    addToTemplate(key, value);
+//    key = "Mobility version";
+//    QSystemInfo si;
+//    QString mobilityver = si.version((QSystemInfo::Version)4);
+//    if (mobilityver.isEmpty() || mobilityver == "Not Available")
+//        value = "1.0.x";
+//    else
+//        value = si.version((QSystemInfo::Version)4);
+//    addToTemplate(key, value);
 
-    key = "Qt Quick";
-    value = "";
-    if (installedlibs.contains("QtDeclarative"))
-    {
-        QString libname(loadLib("./qtquickinfolib")); // hmm... might need to include ./ as one of the possible prefixes ?
-
-        if (!libname.isEmpty())
-        {
-            loadValues(out, libname, key, "qtQuickInfo");
-        }
-    }
-
-    key = "OS / Firmware";
-    value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
-    addToTemplate(key, value);
+//    key = "OS / Firmware";
+//    value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
+//    addToTemplate(key, value);
 
 
 /*    if (true || presentqtlibs.contains("libQtSystemInfo")) { // have mobility, yay !
@@ -196,13 +169,13 @@ MainWindow::MainWindow(QWidget *parent) :
     addToTemplate(key, value);
 
     key = "Image formats";
-    value = "";
+    valuelist.clear();
     QList<QByteArray> sif = QImageReader::supportedImageFormats ();
     foreach (QString fmtstr, sif)
     {
-        value += fmtstr + ", ";
+        valuelist << fmtstr;
     }
-    addToTemplate(key, value);
+    addToTemplate(key, valuelist.join(", "));
 
     html = html.replace("__ROWTEMPLATE__", "");
     html = html.replace("__SECTIONTEMPLATE__", "");
@@ -221,7 +194,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-bool MainWindow::loadValues(QTextStream& out, QString library, QString defaultKey, const char* function)
+bool MainWindow::loadValues(QString library, QString defaultKey, const char* function)
 {
     QString key = defaultKey;
     typedef QList<QPair<QString, QString> > (*fn)();
@@ -288,5 +261,18 @@ QString MainWindow::loadLib(QString libname)
         return lib.fileName();
     } else {
         return QString();
+    }
+}
+
+void MainWindow::loadInfo(QString key, QString libname, QString libfile, char* infofunc)
+{
+    if (installedlibs.contains(libname))
+    {
+        QString libname(loadLib(libfile)); // hmm... might need to include ./ as one of the possible prefixes ?
+
+        if (!libname.isEmpty())
+        {
+            loadValues(libname, key, infofunc);
+        }
     }
 }

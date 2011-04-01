@@ -22,7 +22,6 @@ public:
     ~MainWindow();
 
     QString loadLib(QString libName);
-    bool loadValues(QTextStream& out, QString library, QString defaultKey, const char* function);
 
 public slots:
     void on_closeButton_clicked(bool checked) { this->close(); }
@@ -35,6 +34,8 @@ public slots:
     void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(text); }
 
 private:
+    void loadInfo(QString key, QString libname, QString libfile, char* infofunc); // pvt because of out
+    bool loadValues(QString library, QString defaultKey, const char* function); // pvt because of out
     void addToTemplate(QString key, QString value);
     void addToTemplate(QList<QPair<QString, QString> > list);
     Ui::MainWindow *ui;
@@ -43,6 +44,7 @@ private:
     QString rowstr;
     QString sectionstr;
     QTextStream out;
+    QStringList installedlibs;
 };
 
 #endif // MAINWINDOW_H
