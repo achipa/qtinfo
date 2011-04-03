@@ -110,51 +110,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     foreach(QString libname, qtlibs) {
         if (!loadLib(libname).isEmpty()) {
-//            if (qtmobilitylibs.contains(libname))
-//                ui->modules->setText(ui->modules->text() + " <i>" + libname.replace("lib", "") + "</i>");
-//            else
-//                ui->modules->setText(ui->modules->text() + " " + libname.replace("lib", ""));
             value += libname.replace("lib", "") + " ";
             installedlibs << libname;
         }
     }
     addToTemplate(key, value);
 
-    loadInfo("OpenGL", "QtOpenGL", "./glinfolib", "GLInfo");
+//    loadInfo("Section Name", "Qt module name needed to load", "our local lib name", "our local extern C function name");
 
-    loadInfo("WebKit", "QtWebKit", "./webinfolib", "webkitInfo");
-
-    loadInfo("MultimediaKit", "QtMultimediaKit", "./multimediainfolib", "multimediaInfo");
+    loadInfo("Mobility", "QtSystemInfo", "./mobilityinfolib", "mobilityInfo");
 
     loadInfo("Qt Quick", "QtDeclarative", "./qtquickinfolib", "qtQuickInfo");
 
-//    key = "Mobility version";
-//    QSystemInfo si;
-//    QString mobilityver = si.version((QSystemInfo::Version)4);
-//    if (mobilityver.isEmpty() || mobilityver == "Not Available")
-//        value = "1.0.x";
-//    else
-//        value = si.version((QSystemInfo::Version)4);
-//    addToTemplate(key, value);
+    loadInfo("MultimediaKit", "QtMultimediaKit", "./multimediainfolib", "multimediaInfo");
 
-//    key = "OS / Firmware";
-//    value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
-//    addToTemplate(key, value);
+    loadInfo("OpenGL", "QtOpenGL", "./glinfolib", "GLInfo");
 
-
-/*    if (true || presentqtlibs.contains("libQtSystemInfo")) { // have mobility, yay !
-        typedef QString (*versionfunc) ( int type, const QString & parameters);
-//        QString 	version ( QSystemInfo::Version type, const QString & parameter = QString() )
-        versionfunc v = (versionfunc) QLibrary::resolve("/opt/qt4/lib/libQtSystemInfo", "version");
-        qDebug() << v;
-        if (v) {
-            qDebug() <<"Version func loaded from lib";
-            qDebug() << v(1, QString());
-        }
-
-    } else {
-        ui->mobver->setText(ui->mobver->text() + "None");
-    }*/
+    loadInfo("WebKit", "QtWebKit", "./webinfolib", "webkitInfo");
 
     key = "Library path";
     value = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
@@ -199,12 +171,15 @@ bool MainWindow::loadValues(QString library, QString defaultKey, const char* fun
     QString key = defaultKey;
     typedef QList<QPair<QString, QString> > (*fn)();
     fn v = (fn) QLibrary::resolve(library, function);
+    qDebug() << library <<  v;
     if (v) {
         QList<QPair<QString, QString> > list = v();
         addToTemplate(list);
     } else {
         addToTemplate(key, "Not Available");
+        return false;
     }
+    return true;
 }
 
 void MainWindow::addToTemplate(QString key, QString value)
@@ -264,7 +239,7 @@ QString MainWindow::loadLib(QString libname)
     }
 }
 
-void MainWindow::loadInfo(QString key, QString libname, QString libfile, char* infofunc)
+void MainWindow::loadInfo(QString key, QString libname, QString libfile, const char* infofunc)
 {
     if (installedlibs.contains(libname))
     {

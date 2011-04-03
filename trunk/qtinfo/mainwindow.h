@@ -34,8 +34,8 @@ public slots:
     void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(text); }
 
 private:
-    void loadInfo(QString key, QString libname, QString libfile, char* infofunc); // pvt because of out
-    bool loadValues(QString library, QString defaultKey, const char* function); // pvt because of out
+    void loadInfo(QString key, QString libname, QString libfile, const char* infofunc); // pvt because of out
+    bool loadValues(QString library, QString defaultKey, const char* function); // pvt because of out, used by loadInfo
     void addToTemplate(QString key, QString value);
     void addToTemplate(QList<QPair<QString, QString> > list);
     Ui::MainWindow *ui;
