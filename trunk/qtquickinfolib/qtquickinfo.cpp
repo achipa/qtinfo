@@ -63,16 +63,17 @@ QList<QPair<QString, QString> > qtQuickInfo()
     QList<QPair<QString, QString> > info;
     info.append(QPair<QString,QString>("section", "Qt Quick"));
 
+    info.append(QPair<QString,QString>("Qt Quick version", qtQuickVersion()));
+    info.append(QPair<QString,QString>("Qt Quick plugins", qtQuickPlugins()));
+
     QDeclarativeEngine engine;
     QStringList importPaths = engine.importPathList();
     QString list;
     foreach(QString path, importPaths)
     {
-        list.append(path + " ");
+        list.append(path + "<br>");
     }
 
-    info.append(QPair<QString,QString>("Qt Quick version", qtQuickVersion()));
-    info.append(QPair<QString,QString>("Qt Quick plugins", qtQuickPlugins()));
     info.append(QPair<QString,QString>("Qt Quick import path", list));
 
     return info;
