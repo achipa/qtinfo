@@ -31,3 +31,9 @@ maemo5 {
     target.path = /opt/qtinfo/bin
     INSTALLS += target
 }
+
+OTHER_FILES += \
+    qtquick10.qml \
+    qtquick11.qml \
+    qtquick20.qml \
+    qt47.qml

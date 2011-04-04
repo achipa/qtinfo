@@ -126,7 +126,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadInfo("OpenGL", "QtOpenGL", "./glinfolib", "GLInfo");
 
-    loadInfo("WebKit", "QtWebKit", "./webinfolib", "webkitInfo");
+    loadInfo("WebKit", "QtWebKit", "./webkitinfolib", "webkitInfo");
 
     key = "Library path";
     value = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
