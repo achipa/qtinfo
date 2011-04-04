@@ -13,6 +13,8 @@ QString qtQuickVersion()
     if (view.status() == QDeclarativeView::Ready) return "1.0";
     view.setSource(QUrl::fromLocalFile("qt47.qml"));
     if (view.status() == QDeclarativeView::Ready) return "1.0 (import Qt 4.7)";
+
+    return "Could not determine Qt Quick version";
 }
 
 QList<QPair<QString, QString> > qtQuickInfo()
