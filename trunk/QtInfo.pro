@@ -8,9 +8,10 @@ SUBDIRS = qtquickinfolib \
           webkitinfolib \
           mobilityinfolib \
           multimediainfolib \
+          sqlinfolib \
           qtinfo 
 
-qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib multimediainfolib
+qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib multimediainfolib sqlinfolib
 
 OTHER_FILES += \
     qtc_packaging/debian_fremantle/rules \

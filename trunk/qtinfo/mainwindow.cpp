@@ -128,6 +128,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadInfo("WebKit", "QtWebKit", "./webkitinfolib", "webkitInfo");
 
+    loadInfo("SQL", "QtSql", "./sqlinfolib", "sqlInfo");
+
     key = "Library path";
     value = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     addToTemplate(key, value);
