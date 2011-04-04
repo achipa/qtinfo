@@ -1,6 +1,7 @@
 #include "qtquickinfo.h"
 #include <QtDeclarative>
 #include <QStringList>
+#include <QDebug>
 
 QString qtQuickVersion()
 {
@@ -17,6 +18,46 @@ QString qtQuickVersion()
     return "Could not determine Qt Quick version";
 }
 
+void searchPlugin(QString path, QString plugin, QStringList& pluginList)
+{
+    QDir directory(path);
+    QStringList dirs = directory.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
+
+    if (directory.exists("qmldir"))
+    {
+        // This directory contains file qmldir, so it's probably
+        // a plugin
+        pluginList.append(plugin);
+    }
+
+    // Go through all subdirs
+    foreach(QString entry, dirs)
+    {
+        QString prefix = plugin == "" ? "" : ".";
+        searchPlugin(path+"/"+entry, plugin+prefix+entry, pluginList);
+    }
+}
+
+QString qtQuickPlugins()
+{
+    QDeclarativeEngine engine;
+    QStringList importPaths = engine.importPathList();
+    QStringList plugins;
+
+    foreach(QString path, importPaths)
+    {
+        searchPlugin(path,"",plugins);
+    }
+
+    QString pluginList;
+    foreach(QString plugin, plugins)
+    {
+        pluginList += plugin + "<br>";
+    }
+
+    return pluginList;
+}
+
 QList<QPair<QString, QString> > qtQuickInfo()
 {
     QList<QPair<QString, QString> > info;
@@ -31,6 +72,7 @@ QList<QPair<QString, QString> > qtQuickInfo()
     }
 
     info.append(QPair<QString,QString>("Qt Quick version", qtQuickVersion()));
+    info.append(QPair<QString,QString>("Qt Quick plugins", qtQuickPlugins()));
     info.append(QPair<QString,QString>("Qt Quick import path", list));
 
     return info;
