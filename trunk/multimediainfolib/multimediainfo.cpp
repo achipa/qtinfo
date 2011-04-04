@@ -39,7 +39,7 @@ QList<QPair<QString, QString> > multimediaInfo()
     if (!QCamera::availableDevices().isEmpty()) {
         QCamera audiocam(QCamera::availableDevices().at(0));
         QMediaRecorder audiomediarec(&audiocam);
-        info.append(QPair<QString,QString>("Supported codecs", audiomediarec.supportedAudioCodecs().join(",")));
+        info.append(QPair<QString,QString>("Supported codecs", audiomediarec.supportedAudioCodecs().join(",").replace("audio/","")));
 
         info.append(QPair<QString,QString>("section", "MultimediaKit Video"));
         foreach(QByteArray camname, QCamera::availableDevices()) {
@@ -56,7 +56,7 @@ QList<QPair<QString, QString> > multimediaInfo()
             values.clear();
 
             if (!mediarec.supportedVideoCodecs().isEmpty()) {
-                info.append(QPair<QString,QString>(QString("Supported codecs (%0)").arg(QString(camname)), mediarec.supportedVideoCodecs().join(",")));
+                info.append(QPair<QString,QString>(QString("Supported codecs (%0)").arg(QString(camname)), mediarec.supportedVideoCodecs().join(",").replace("video/","")));
                 foreach (QString codecstr, mediarec.supportedVideoCodecs()) {
                     QVideoEncoderSettings ves;
                     ves.setCodec(codecstr);

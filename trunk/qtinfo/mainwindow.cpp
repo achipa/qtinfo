@@ -3,6 +3,7 @@
 #include <QLibrary>
 #include <QLibraryInfo>
 #include <QImageReader>
+#include <QFontDatabase>
 //#include <QSystemInfo>
 #include <QLocale>
 #include <QDebug>
@@ -147,6 +148,23 @@ MainWindow::MainWindow(QWidget *parent) :
         valuelist << fmtstr;
     }
     addToTemplate(key, valuelist.join(", "));
+
+    QList<QPair<QString, QString> > list;
+    list.append(QPair<QString,QString>("section", "Fonts"));
+    QFontDatabase database;
+    list.append(QPair<QString,QString>("Installed fonts", database.families().join(", ")));
+    // database.pointSizes(family) // One day...
+    valuelist.clear();
+    foreach(QFontDatabase::WritingSystem ws, database.writingSystems()) {
+        valuelist << QString("%0 (%1)").arg(QFontDatabase::writingSystemName(ws)).arg(QFontDatabase::writingSystemSample(ws));
+    }
+    list.append(QPair<QString,QString>("Writing systems", valuelist.join(", ")));
+    valuelist.clear();
+    foreach(int size, database.standardSizes()) {
+        valuelist << QString("%0").arg(size);
+    }
+    list.append(QPair<QString,QString>("Standard sizes", valuelist.join(", ")));
+    addToTemplate(list);
 
     html = html.replace("__ROWTEMPLATE__", "");
     html = html.replace("__SECTIONTEMPLATE__", "");

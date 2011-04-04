@@ -37,3 +37,6 @@ OTHER_FILES += \
     qtquick11.qml \
     qtquick20.qml \
     qt47.qml
+
+RESOURCES += \
+    qtquickqmls.qrc

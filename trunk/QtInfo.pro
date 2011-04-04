@@ -18,7 +18,8 @@ OTHER_FILES += \
     qtc_packaging/debian_fremantle/copyright \
     qtc_packaging/debian_fremantle/control \
     qtc_packaging/debian_fremantle/compat \
-    qtc_packaging/debian_fremantle/changelog
+    qtc_packaging/debian_fremantle/changelog \
+    qtc_packaging/meego.spec
 
 maemo5 {
     target.path = /opt/qtinfo/bin
