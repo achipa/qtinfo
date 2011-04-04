@@ -1,7 +1,10 @@
 #include "mobilityinfo.h"
 #include <qmobilityglobal.h>
 #include <QStringList>
-#include <qsysteminfo.h>
+#include <QSystemInfo>
+#include <QSystemDisplayInfo>
+#include <QSystemStorageInfo>
+#include <QDesktopWidget>
 
 QTM_USE_NAMESPACE
 
@@ -41,7 +44,21 @@ QList<QPair<QString, QString> > mobilityInfo()
     if (qsi.hasFeatureSupported((QSystemInfo::Feature)13)) valuelist << "FM Transmitter"; // added in 1.2 so no enum
 
     info.append(QPair<QString,QString>("Hardware features", valuelist.join(", ")));
-    info.append(QPair<QString,QString>("Available languages", qsi.availableLanguages().join(", ")));
+    QDesktopWidget qdw;
+    QSystemDisplayInfo qsdi;
+    for (int i=0; i<qdw.screenCount() ; i++) {
+        QRect sg = qdw.screenGeometry(i);
+// DPI info needs mobility 1.2
+//        info.append(QPair<QString,QString>(QString("Screen (%0)").arg(i), QString("%0x%1, %2 DPI, %3b").arg(sg.width()).arg(sg.height()).arg(qsdi.getDPIWidth(i)).arg(qsdi.colorDepth(i))));
+        info.append(QPair<QString,QString>(QString("Screen (%0)").arg(i), QString("%0x%1, %2b").arg(sg.width()).arg(sg.height()).arg(qsdi.colorDepth(i))));
+    }
+
+    // undocumented (and segfaulting) API, stay away
+//    foreach (QString drive, QSystemStorageInfo::logicalDrives()) {
+//        QSystemStorageInfo qssi;
+//        info.append(QPair<QString,QString>(QString("Storage (%0)").arg(drive), QString("%0 (%1 free)").arg(qssi.totalDiskSpace(drive)).arg(qssi.availableDiskSpace(drive))));
+//    }
+
 
     return info;
 }

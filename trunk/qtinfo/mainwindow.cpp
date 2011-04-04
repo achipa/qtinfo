@@ -83,6 +83,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qtlibs << "phonon";
     qtlibs << "QtNetwork";
     qtlibs << "QtOpenGL";
+    qtlibs << "QtOpenVG";
     qtlibs << "QtScript";
     qtlibs << "QtScriptTools";
     qtlibs << "QtSql";

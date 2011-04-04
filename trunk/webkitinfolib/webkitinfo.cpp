@@ -17,6 +17,8 @@ QList<QPair<QString, QString> > webkitInfo()
     //  QtWebKit tries to load platformplugin.dll on startup, and if that is
     //  found, it will be used for certain platform-specific operations.
 
+    //TODO get plugin list (flash, java, etc)
+
     QStringList valuelist;
     info.append(QPair<QString,QString>("section", "Networking"));
     foreach (QNetworkInterface qni, QNetworkInterface::allInterfaces () ) {
