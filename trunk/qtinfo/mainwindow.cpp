@@ -15,7 +15,7 @@
 
 #define ROWTEMPLATE "\n\
             <tr>\n\
-              <td class=\"info\"><strong>%0</strong></td>\n\
+              <td class=\"info\" width=\"100\"><strong>%0</strong></td>\n\
               <td>%1</td>\n\
             </tr>%2"
 
@@ -46,7 +46,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QStringList valuelist;
 
     addToTemplate(key, value);
-
 
     key = "Qt build";
     value = QLibraryInfo::buildDate().toString()+ ", " + QLibraryInfo::buildKey()  + ", " + QLibraryInfo::licensee();
