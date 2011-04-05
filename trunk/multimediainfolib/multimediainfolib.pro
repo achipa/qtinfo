@@ -9,7 +9,9 @@ INCLUDEPATH += .
 
 QT += core gui
 maemo5 {
+#    CONFIG += mobility
     CONFIG += mobility11
+#    CONFIG += mobility12
 } else {
     CONFIG += mobility
 }

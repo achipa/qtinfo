@@ -7,13 +7,13 @@ QString qtQuickVersion()
 {
     QDeclarativeView view;
     view.setSource(QUrl("qrc:///qml/qtquick20.qml"));
-    if (view.status() == QDeclarativeView::Ready) return "2.0";
+    if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "2.0";
     view.setSource(QUrl("qrc:///qml/qtquick11.qml"));
-    if (view.status() == QDeclarativeView::Ready) return "1.1";
+    if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "1.1";
     view.setSource(QUrl("qrc:///qml/qtquick10.qml"));
-    if (view.status() == QDeclarativeView::Ready) return "1.0";
+    if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "1.0";
     view.setSource(QUrl("qrc:///qml/qt47.qml"));
-    if (view.status() == QDeclarativeView::Ready) return "1.0 (import Qt 4.7)";
+    if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "1.0 (import Qt 4.7)";
 
     return "Could not determine Qt Quick version";
 }

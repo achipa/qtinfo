@@ -4,15 +4,11 @@
 #include <QLibraryInfo>
 #include <QImageReader>
 #include <QFontDatabase>
-//#include <QSystemInfo>
 #include <QLocale>
 #include <QDebug>
-//#include <QtWebKit>
-//#include <QSslSocket>
 #include <QTextStream>
 #include <QDesktopServices>
-
-//QTM_USE_NAMESPACE
+#include <QTextBrowser>
 
 #define ROWTEMPLATE "\n\
             <tr>\n\
@@ -205,7 +201,10 @@ bool MainWindow::loadValues(QString library, QString defaultKey, const char* fun
 void MainWindow::addToTemplate(QString key, QString value)
 {
     html = html.replace("__ROWTEMPLATE__", rowstr.arg(key).arg(value).arg("__ROWTEMPLATE__"));
-    out << key << ": " << value << endl;
+
+    QTextBrowser tb;
+    tb.setHtml(value);
+    out << key << ": " << tb.toPlainText() << endl;
 }
 
 void MainWindow::addToTemplate(QList<QPair<QString, QString> > list)
@@ -243,7 +242,7 @@ QString MainWindow::loadLib(QString libname)
                 if (lib.load()) break;
                 lib.setFileName(prefix + libname + version); // Windows and Symbian naming
                 if (lib.load()) break;
-                }
+            }
             if (lib.isLoaded()) break;
         }
     }
