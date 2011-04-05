@@ -18,9 +18,6 @@ HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 
-#CONFIG += mobility
-#MOBILITY = systeminfo
-
 symbian {
     TARGET.UID3 = 0xe4b20d40
     TARGET.CAPABILITY += LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData # WriteDeviceData ReadDeviceData ?
@@ -38,7 +35,17 @@ CONFIG(release, debug|release): DEFINES += QT_NO_DEBUG_OUTPUT
 RESOURCES += \
     qtinfo.qrc
 
-maemo5 {
+unix:!symbian { # not funny
+    desktopfile.files = $${TARGET}.desktop
+    maemo5 {
+        icon.files = $${TARGET}.png
+        icon.path = /usr/share/icons/hicolor/64x64/apps
+        desktopfile.path = /usr/share/applications/hildon
+    } else {
+        icon.files = $${TARGET}.svg
+        icon.path = /usr/share/themes/base/meegotouch/icons
+        desktopfile.path = /usr/share/applications
+    }
     target.path = /opt/qtinfo/bin
-    INSTALLS += target
+    INSTALLS += desktopfile icon target  
 }

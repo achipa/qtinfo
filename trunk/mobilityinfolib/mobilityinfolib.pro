@@ -21,7 +21,7 @@ MOBILITY += systeminfo sensors # serviceframework
 HEADERS += mobilityinfo.h
 SOURCES += mobilityinfo.cpp
 
-maemo5 {
+unix:!symbian { # not funny
     target.path = /opt/qtinfo/bin
     INSTALLS += target
 }

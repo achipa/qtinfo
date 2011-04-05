@@ -26,7 +26,8 @@ symbian {
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
 }
-maemo5 {
+
+unix:!symbian: {
     target.path = /opt/qtinfo/bin
     INSTALLS += target
 }

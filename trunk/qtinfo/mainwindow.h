@@ -8,6 +8,7 @@
 #include <QtCore/QFile>
 #include <QtGui/QApplication>
 #include <QTextStream>
+#include <QtGui/QFileDialog>
 
 namespace Ui {
     class MainWindow;
@@ -28,8 +29,8 @@ public slots:
     void on_emailButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl(QString("mailto:user@foo.com?subject=QtInfo&body=%0").arg(text))); }
 #ifdef Q_WS_MAEMO_5
 //    void on_mailButton_clicked(bool checked) { QDBusInterface browser("com.nokia.modest", "/com/nokia/modest", "com.nokia.modest")  ; browser.call("MailTo", "");}
-    void on_saveButton_clicked(bool checked) { QFile outfile("/home/user/MyDocs/qtinfo.html"); outfile.open(QIODevice::WriteOnly); outfile.write(html.toAscii()); outfile.close();  }
 #endif
+    void on_saveButton_clicked(bool checked) { QFile outfile(QFileDialog::getSaveFileName(this, "Save output as", "/home/user/MyDocs/qtinfo.html")); outfile.open(QIODevice::WriteOnly); outfile.write(html.toAscii()); outfile.close();  }
     void on_jsbinButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl("http://pastebin.com")); }
     void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(text); }
 

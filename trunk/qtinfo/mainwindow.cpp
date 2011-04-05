@@ -115,17 +115,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //    loadInfo("Section Name", "Qt module name needed to load", "our local lib name", "our local extern C function name");
 
-    loadInfo("Mobility", "QtSystemInfo", "./mobilityinfolib", "mobilityInfo");
+    loadInfo("Mobility", "QtSystemInfo", "mobilityinfolib", "mobilityInfo");
 
-    loadInfo("Qt Quick", "QtDeclarative", "./qtquickinfolib", "qtQuickInfo");
+    loadInfo("Qt Quick", "QtDeclarative", "qtquickinfolib", "qtQuickInfo");
 
-    loadInfo("MultimediaKit", "QtMultimediaKit", "./multimediainfolib", "multimediaInfo");
+    loadInfo("MultimediaKit", "QtMultimediaKit", "multimediainfolib", "multimediaInfo");
 
-    loadInfo("OpenGL", "QtOpenGL", "./glinfolib", "GLInfo");
+    loadInfo("OpenGL", "QtOpenGL", "glinfolib", "GLInfo");
 
-    loadInfo("WebKit", "QtWebKit", "./webkitinfolib", "webkitInfo");
+    loadInfo("WebKit", "QtWebKit", "webkitinfolib", "webkitInfo");
 
-    loadInfo("SQL", "QtSql", "./sqlinfolib", "sqlInfo");
+    loadInfo("SQL", "QtSql", "sqlinfolib", "sqlInfo");
 
     key = "Library path";
     value = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
@@ -262,7 +262,7 @@ void MainWindow::loadInfo(QString key, QString libname, QString libfile, const c
 {
     if (installedlibs.contains(libname))
     {
-        QString libname(loadLib(libfile)); // hmm... might need to include ./ as one of the possible prefixes ?
+        QString libname(loadLib(qApp->applicationDirPath()+"/"+libfile)); // hmm... might need to include ./ as one of the possible prefixes ?
 
         if (!libname.isEmpty())
         {

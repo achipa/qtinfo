@@ -21,7 +21,7 @@ MOBILITY += multimedia
 HEADERS += multimediainfo.h
 SOURCES += multimediainfo.cpp
 
-maemo5 {
+unix:!symbian { # not funny
     target.path = /opt/qtinfo/bin
     INSTALLS += target
 }

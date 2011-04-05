@@ -29,7 +29,8 @@ symbian {
     DEPLOYMENT += addFiles
 }
 
-maemo5 {
+unix:!symbian { # not funny
     target.path = /opt/qtinfo/bin
     INSTALLS += target
 }
+
