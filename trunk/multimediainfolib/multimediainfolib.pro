@@ -17,6 +17,20 @@ maemo5 {
 }
 MOBILITY += multimedia
 
+symbian {
+    #Build STDDLL
+    CONFIG += stdbinary
+
+    #Symbian specific definitions
+    MMP_RULES += EXPORTUNFROZEN
+    TARGET.UID3 = 0xE2141820
+    TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
+    TARGET.EPOCALLOWDLLDATA = 1
+    addFiles.sources = multimediainfolib.dll
+    addFiles.path = !:/sys/bin
+    DEPLOYMENT += addFiles
+}
+
 # Input
 HEADERS += multimediainfo.h
 SOURCES += multimediainfo.cpp

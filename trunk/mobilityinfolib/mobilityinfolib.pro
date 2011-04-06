@@ -17,6 +17,21 @@ maemo5 {
 }
 MOBILITY += systeminfo sensors # serviceframework
 
+symbian {
+    #Build STDDLL
+    CONFIG += stdbinary
+
+    #Symbian specific definitions
+    MMP_RULES += EXPORTUNFROZEN
+    TARGET.UID3 = 0xE216289B
+    TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
+    TARGET.EPOCALLOWDLLDATA = 1
+    addFiles.sources = mobilityinfolib.dll
+    addFiles.path = !:/sys/bin
+    DEPLOYMENT += addFiles
+}
+
+
 # Input
 HEADERS += mobilityinfo.h
 SOURCES += mobilityinfo.cpp

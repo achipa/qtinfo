@@ -22,7 +22,7 @@ symbian {
     TARGET.UID3 = 0xE2DBBFFE
     TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = webkitinfolib.dll
+    addFiles.sources = sqlinfolib.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
 }
