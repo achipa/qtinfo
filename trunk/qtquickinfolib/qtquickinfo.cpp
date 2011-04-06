@@ -18,7 +18,41 @@ QString qtQuickVersion()
     return "Could not determine Qt Quick version";
 }
 
-void searchPlugin(QString path, QString plugin, QStringList& pluginList)
+// Parses a qmldir file, outputs the components defined in qmldir to result.
+void parseQmldir(QString& fileName, QStringList& result)
+{
+    QFile file(fileName);
+
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QTextStream in(&file);
+        QString line = in.readLine();
+        while (!line.isNull()) {
+            QStringList items = line.split(' ');
+
+            if (items.length() > 1)
+            {
+                // qmldir has a line "plugin dllname", ignore that
+                if (items.at(0) != "plugin")
+                {
+                    // Append component name + version
+                    QString component = "&nbsp;&nbsp;&nbsp;&nbsp;";
+                    component += items.at(0) + " " + items.at(1);
+                    result.append(component);
+                }
+            }
+
+            line = in.readLine();
+        }
+
+        file.close();
+    }
+}
+
+// Searches for QML plugins in a directory + all its subdirectories
+// Outputs plugin import names "e.g. com.nokia.symbian" to pluginList and all the existing
+// Qt Quick Components to qtComponentsList
+void searchPlugin(QString path, QString plugin, QStringList& pluginList, QStringList& qtComponentsList)
 {
     QDir directory(path);
     QStringList dirs = directory.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
@@ -28,17 +62,26 @@ void searchPlugin(QString path, QString plugin, QStringList& pluginList)
         // This directory contains file qmldir, so it's probably
         // a plugin
         pluginList.append(plugin);
+
+        if (plugin == "Qt.labs.components" || plugin == "Qt.labs.components.native" ||
+            plugin == "com.nokia.symbian" || plugin == "com.nokia.meego")
+        {
+            qtComponentsList.append("<b>"+plugin+"</b>");
+            QString qmldir = path+"/qmldir";
+            parseQmldir(qmldir, qtComponentsList);
+        }
     }
 
     // Go through all subdirs
     foreach(QString entry, dirs)
     {
         QString prefix = plugin == "" ? "" : ".";
-        searchPlugin(path+"/"+entry, plugin+prefix+entry, pluginList);
+        searchPlugin(path+"/"+entry, plugin+prefix+entry, pluginList, qtComponentsList);
     }
 }
 
-QString qtQuickPlugins()
+// Returns a string with all QML plugins found from the QDeclarativeEngine import path
+QString qtQuickPlugins(QStringList& qtComponents)
 {
     QDeclarativeEngine engine;
     QStringList importPaths = engine.importPathList();
@@ -46,7 +89,7 @@ QString qtQuickPlugins()
 
     foreach(QString path, importPaths)
     {
-        searchPlugin(path,"",plugins);
+        searchPlugin(path,"",plugins, qtComponents);
     }
 
     QString pluginList;
@@ -58,13 +101,26 @@ QString qtQuickPlugins()
     return pluginList;
 }
 
+
 QList<QPair<QString, QString> > qtQuickInfo()
 {
     QList<QPair<QString, QString> > info;
     info.append(QPair<QString,QString>("section", "Qt Quick"));
 
     info.append(QPair<QString,QString>("Qt Quick version", qtQuickVersion()));
-    info.append(QPair<QString,QString>("Qt Quick plugins", qtQuickPlugins()));
+
+    QStringList plugins;
+    QStringList qtComponents;
+
+    info.append(QPair<QString,QString>("Qt Quick plugins", qtQuickPlugins(qtComponents)));
+
+    QString components;
+    foreach(QString component, qtComponents)
+    {
+        components += component + "<br>";
+    }
+
+    info.append(QPair<QString,QString>("Qt Components", components));
 
     QDeclarativeEngine engine;
     QStringList importPaths = engine.importPathList();
@@ -78,5 +134,6 @@ QList<QPair<QString, QString> > qtQuickInfo()
 
     return info;
 }
+
 
 
