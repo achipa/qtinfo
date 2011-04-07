@@ -63,23 +63,22 @@ MainWindow::MainWindow(QWidget *parent) :
     QStringList qtmobilitylibs;
 
     qtlibs << "Qt3Support";
-    qtlibs << "QtBearer";
     qtlibs << "QAxContainer";
     qtlibs << "QAxServer";
     qtlibs << "QtCLucene";
     qtlibs << "QtCore";
     qtlibs << "QtDBus";
-    qtlibs << "QtDeclarative";
+    qtlibs << "QtDeclarative";           // 4.7
     qtlibs << "QtDesignerComponents";
     qtlibs << "QtDesigner";
     qtlibs << "QtGui";
     qtlibs << "QtHelp";
     qtlibs << "QtMultimedia";
-    qtlibs << "QtMaemo5";
+    qtlibs << "QtMaemo5";                // 4.6
     qtlibs << "phonon";
-    qtlibs << "QtNetwork";
+    qtlibs << "QtNetwork";               // includes QtBearer starting w 4.7
     qtlibs << "QtOpenGL";
-    qtlibs << "QtOpenVG";
+    qtlibs << "QtOpenVG";                // 4.6
     qtlibs << "QtScript";
     qtlibs << "QtScriptTools";
     qtlibs << "QtSql";
@@ -90,18 +89,19 @@ MainWindow::MainWindow(QWidget *parent) :
     qtlibs << "QtXmlPatterns";
     qtlibs << "QtXml";
 
-    qtmobilitylibs << "QtConnectivity";
+    qtmobilitylibs << "QtBearer";          // 1.0.x ONLY
+    qtmobilitylibs << "QtConnectivity";    // 1.2
     qtmobilitylibs << "QtContacts";
-    qtmobilitylibs << "QtFeedback";
-    qtmobilitylibs << "QtGallery";
+    qtmobilitylibs << "QtFeedback";        // 1.1
+    qtmobilitylibs << "QtGallery";         // 1.1
     qtmobilitylibs << "QtLocation";
     qtmobilitylibs << "QtMultimediaKit";
     qtmobilitylibs << "QtSensors";
     qtmobilitylibs << "QtServiceFramework";
     qtmobilitylibs << "QtSystemInfo";
-    qtmobilitylibs << "QtOrganizer";
+    qtmobilitylibs << "QtOrganizer";       // 1.1
     qtmobilitylibs << "QtPublishSubscribe";
-    qtmobilitylibs << "QtVersitOrganizer";
+    qtmobilitylibs << "QtVersitOrganizer"; // 1.1
     qtmobilitylibs << "QtVersit";
     qtlibs.append(qtmobilitylibs);
 
@@ -113,13 +113,25 @@ MainWindow::MainWindow(QWidget *parent) :
     }
     addToTemplate(key, value);
 
+    int mobver = divineMobilityVersion();
+    QString libsuffix;
+    if (mobver >= 0x010200) {
+        libsuffix = "12";
+    } else if (mobver >= 0x010100) {
+        libsuffix = "11";
+    }
+
 //    loadInfo("Section Name", "Qt module name needed to load", "our local lib name", "our local extern C function name");
 
+#ifdef Q_WS_MAEMO_5
+    loadInfo("Mobility", "QtSystemInfo", QString("mobilityinfolib%0").arg(libsuffix), "mobilityInfo");
+    loadInfo("MultimediaKit", "QtMultimediaKit", QString("multimediainfolib%0").arg(libsuffix), "multimediaInfo");
+#else
     loadInfo("Mobility", "QtSystemInfo", "mobilityinfolib", "mobilityInfo");
+    loadInfo("MultimediaKit", "QtMultimediaKit", "multimediainfolib", "multimediaInfo");
+#endif
 
     loadInfo("Qt Quick", "QtDeclarative", "qtquickinfolib", "qtQuickInfo");
-
-    loadInfo("MultimediaKit", "QtMultimediaKit", "multimediainfolib", "multimediaInfo");
 
     loadInfo("OpenGL", "QtOpenGL", "glinfolib", "GLInfo");
 
@@ -269,4 +281,23 @@ void MainWindow::loadInfo(QString key, QString libname, QString libfile, const c
             loadValues(libname, key, infofunc);
         }
     }
+}
+
+int MainWindow::divineMobilityVersion()
+{
+    if (installedlibs.contains("QtConnectivity"))
+        return 0x010200;
+    if (installedlibs.contains("QtGallery"))
+        return 0x010100;
+#ifdef Q_WS_MAEMO_5
+    // check if we might have the community edition installed somewhere
+    if (!loadLib("/opt/qtm12/lib/libQtConnectivity").isEmpty())
+        return 0x010200;
+    if (!loadLib("/opt/qtm11/lib/libQtGallery").isEmpty())
+        return 0x010100;
+#endif
+    if (installedlibs.contains("QtBearer")) // bearer is present ONLY in 1.0
+        return 0x010000;
+
+    return 0;
 }

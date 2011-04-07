@@ -47,5 +47,5 @@ unix:!symbian { # not funny
         desktopfile.path = /usr/share/applications
     }
     target.path = /opt/qtinfo/bin
-    INSTALLS += desktopfile icon target  
+    INSTALLS += desktopfile icon target
 }

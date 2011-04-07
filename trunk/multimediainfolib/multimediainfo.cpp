@@ -3,7 +3,9 @@
 #include <QStringList>
 #include <qaudio.h>
 #include <qaudiodeviceinfo.h>
+#if QTM_VERSION >= 0x010100
 #include <qcamera.h>
+#endif
 #include <qmediarecorder.h>
 #include <QDebug>
 
@@ -33,6 +35,8 @@ QList<QPair<QString, QString> > multimediaInfo()
         }
         info.append(QPair<QString,QString>("Output devices", devices.join(",")));
     }
+
+#if QTM_VERSION >= 0x010100
 
     // "real" audio codecs are actually visible under the QMediaRecorder, so we'll check that under the video section
 
@@ -81,6 +85,7 @@ QList<QPair<QString, QString> > multimediaInfo()
         }
     }
     devices.clear();
+#endif
 
 
     return info;

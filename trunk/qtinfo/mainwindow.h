@@ -23,6 +23,7 @@ public:
     ~MainWindow();
 
     QString loadLib(QString libName);
+    int divineMobilityVersion();
 
 public slots:
     void on_closeButton_clicked(bool checked) { this->close(); }

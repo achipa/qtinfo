@@ -1,6 +1,6 @@
 Name: qtinfo
 Summary: Display runtime Qt (Quick) and System information
-Version: 2.0.0
+Version: 2.1.0
 Release: 1
 License: <Enter your application's license here>
 Group: <Set your application's group here>
