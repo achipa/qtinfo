@@ -184,6 +184,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QTextStream sout(stdout);
     sout << text;
+
+//  uncomment this to enable the future QML powered UI
+
+//    if (installedlibs.contains("QtDeclarative")) { // go for fancy declarative UI instead of QWidgets
+//        QWidget* widget = loadWidget("declarativeui", "declarativeUI");
+//        if (widget) {
+//            widget->setParent(ui->widget);
+//            ui->textBrowser->setVisible(false);
+//    // Note that QML buttons should call the same methods as the auto-slot-connected buttons
+//        }
+//    } else {
+//        ui->widget->setVisible(false);
+//    }
+
 #ifdef Q_WS_MAEMO_5
     ui->closeButton->setVisible(false);
 #endif
@@ -210,9 +224,21 @@ bool MainWindow::loadValues(QString library, QString defaultKey, const char* fun
     return true;
 }
 
+QWidget* MainWindow::loadWidget(QString library, const char* function)
+{
+    typedef QWidget* (*fn)(QList<QPair<QString, QString> >);
+    fn v = (fn) QLibrary::resolve(loadLib(qApp->applicationDirPath()+"/"+library), function);
+    qDebug() << library <<  v;
+    if (v) {
+        return v(rawpairs);
+    }
+    return NULL;
+}
+
 void MainWindow::addToTemplate(QString key, QString value)
 {
     html = html.replace("__ROWTEMPLATE__", rowstr.arg(key).arg(value).arg("__ROWTEMPLATE__"));
+    rawpairs.append(qMakePair(key, value));
 
     QTextBrowser tb;
     tb.setHtml(value);
@@ -225,6 +251,7 @@ void MainWindow::addToTemplate(QList<QPair<QString, QString> > list)
     for (int i = 0; i < list.length(); i++)
     {
         QPair<QString, QString> key = list.at(i);
+        rawpairs.append(key);
         if (key.first == "section") {
             insection = true;
             html = html.replace("__SECTIONROWTEMPLATE__", ""); // close off any previous open sections we might have
