@@ -192,6 +192,8 @@ MainWindow::MainWindow(QWidget *parent) :
 //        if (widget) {
 //            widget->setParent(ui->widget);
 //            ui->textBrowser->setVisible(false);
+//            ui->widget->setEnabled(true);
+//            ui->widget->setVisible(true);
 //    // Note that QML buttons should call the same methods as the auto-slot-connected buttons
 //        }
 //    } else {
