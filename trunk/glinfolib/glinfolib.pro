@@ -14,17 +14,17 @@ HEADERS += glinfo.h
 SOURCES += glinfo.cpp
 
 symbian {
-    contains(QT_VERSION, ^4\\.[0-6]\\..*): QT -= opengl
-
     #Build STDDLL
     CONFIG += stdbinary
+
+    TARGET = glinfolib
 
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE2D94F71
     TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = glinfolib.dll
+    addFiles.sources = $${TARGET}.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
 }

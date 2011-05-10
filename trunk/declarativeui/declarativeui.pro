@@ -14,15 +14,19 @@ HEADERS += declarativeui.h
 SOURCES += declarativeui.cpp
 
 symbian {
+    DESTDIR=test1
+
     #Build STDDLL
     CONFIG += stdbinary
+
+    TARGET = declarativeui
 
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE19D73D4
     TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = declarativeui.dll
+    addFiles.sources = $${TARGET}.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
 }

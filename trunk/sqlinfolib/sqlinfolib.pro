@@ -17,12 +17,14 @@ symbian {
     #Build STDDLL
     CONFIG += stdbinary
 
+    TARGET = sqlinfolib
+
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE2DBBFFE
     TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = sqlinfolib.dll
+    addFiles.sources = $${TARGET}.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
 }

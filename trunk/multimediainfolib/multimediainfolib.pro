@@ -32,12 +32,14 @@ symbian {
     #Build STDDLL
     CONFIG += stdbinary
 
+    TARGET = multimediainfolib$$MOBILITY_MAJOR_VERSION$$MOBILITY_MINOR_VERSION
+
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE2141820
     TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = multimediainfolib.dll
+    addFiles.sources = $${TARGET}.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
 }

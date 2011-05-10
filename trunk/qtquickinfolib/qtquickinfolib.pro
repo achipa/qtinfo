@@ -17,12 +17,14 @@ symbian {
     #Build STDDLL
     CONFIG += stdbinary
 
+    TARGET = qtquickinfolib
+
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
     TARGET.UID3 = 0xE19D73D4
     TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCALLOWDLLDATA = 1
-    addFiles.sources = qtquickinfolib.dll
+    addFiles.sources = $${TARGET}.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
 }

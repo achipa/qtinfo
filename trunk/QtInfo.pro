@@ -3,16 +3,28 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 # The actual projects
-SUBDIRS = qtquickinfolib \
-          glinfolib \
+SUBDIRS = glinfolib \
           webkitinfolib \
           mobilityinfolib \
           multimediainfolib \
           sqlinfolib \
-          declarativeui \
           qtinfo 
 
-qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib sqlinfolib multimediainfolib declarativeui
+qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib sqlinfolib multimediainfolib
+
+!contains(QT_VERSION, ^4\\.[0-6]\\..*) {
+
+SUBDIRS += declarativeui qtquickinfolib
+
+qtinfo.depends += declarativeui qtquickinfolib
+}
+else  {
+symbian: {
+    SUBDIRS -= glinfolib
+    qtinfo.depends -= glinfolibs
+    }
+}
+
 
 OTHER_FILES += \
     qtc_packaging/debian_fremantle/rules \
@@ -33,3 +45,5 @@ unix:!symbian { # not funny
     target.path = /opt/qtinfo/bin
     INSTALLS += target
 }
+
+symbian:OTHER_FILES += magic.pkg
