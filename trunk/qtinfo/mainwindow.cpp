@@ -42,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QString value = qVersion();
     QStringList valuelist;
 
+    qDebug() << key << value ;
+
     addToTemplate(key, value);
 
     key = "Qt build";
@@ -120,16 +122,16 @@ MainWindow::MainWindow(QWidget *parent) :
     } else if (mobver >= 0x010100) {
         libsuffix = "11";
     }
+    else // 1.0
+    {
+        libsuffix = "10";
+    }
 
 //    loadInfo("Section Name", "Qt module name needed to load", "our local lib name", "our local extern C function name");
 
-#ifdef Q_WS_MAEMO_5
+
     loadInfo("Mobility", "QtSystemInfo", QString("mobilityinfolib%0").arg(libsuffix), "mobilityInfo");
     loadInfo("MultimediaKit", "QtMultimediaKit", QString("multimediainfolib%0").arg(libsuffix), "multimediaInfo");
-#else
-    loadInfo("Mobility", "QtSystemInfo", "mobilityinfolib", "mobilityInfo");
-    loadInfo("MultimediaKit", "QtMultimediaKit", "multimediainfolib", "multimediaInfo");
-#endif
 
     loadInfo("Qt Quick", "QtDeclarative", "qtquickinfolib", "qtQuickInfo");
 
@@ -274,6 +276,12 @@ void MainWindow::addToTemplate(QList<QPair<QString, QString> > list)
 
 QString MainWindow::loadLib(QString libname)
 {
+// very very dirty hack
+// to sort out why when 4.6.x is installed loading QtBearer appears to hang the app
+#ifdef Q_OS_SYMBIAN
+    if(QString(qVersion()).startsWith("4.6") && libname=="QtBearer" )
+        return QString("QtBearer");
+#endif
     QLibrary lib(libname);
 //    qDebug() << lib.errorString();
     if (!lib.load()) {

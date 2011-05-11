@@ -23,6 +23,7 @@ symbian {
     TARGET.CAPABILITY += LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData # WriteDeviceData ReadDeviceData ?
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 0x800000
+    ICON=qtinfo.svg
 }
 
 contains(QMAKE_HOST.os, Linux): {

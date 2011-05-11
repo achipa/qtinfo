@@ -1,6 +1,11 @@
 # Do not do this in your projects - we're trained professionals
 
+symbian:TARGET.UID3=0xA1234567
+
+
 PASS=1
+
+
 
 contains(PASS,1) {
 	maemo5 {
