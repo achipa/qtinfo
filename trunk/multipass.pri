@@ -24,6 +24,7 @@ contains(PASS,2) {
 contains(PASS,3) {
 	maemo5 {
 		MOBCONFIG=mobility
+#		MOBLOAD=mobilityconfig10 # mobility 1.0 has no config
 	}
 }
 

@@ -9,6 +9,7 @@
 #include <QtGui/QApplication>
 #include <QTextStream>
 #include <QtGui/QFileDialog>
+#include "infoloader.h"
 
 namespace Ui {
     class MainWindow;
@@ -22,33 +23,25 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    QString loadLib(QString libName);
-    int divineMobilityVersion();
+//    void startLoading() { infoloader->start(); }
+//    void startLoading() { infoloader->run(); showUI(); }
 
 public slots:
+    void updateLoadScreen(QString str);
     void on_closeButton_clicked(bool checked) { this->close(); }
-    void on_emailButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl(QString("mailto:user@foo.com?subject=QtInfo&body=%0").arg(text))); }
+    void on_emailButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl(QString("mailto:user@foo.com?subject=QtInfo&body=%0").arg(infoloader->resultAsText()))); }
 #ifdef Q_WS_MAEMO_5
 //    void on_mailButton_clicked(bool checked) { QDBusInterface browser("com.nokia.modest", "/com/nokia/modest", "com.nokia.modest")  ; browser.call("MailTo", "");}
 #endif
-    void on_saveButton_clicked(bool checked) { QFile outfile(QFileDialog::getSaveFileName(this, "Save output as", "/home/user/MyDocs/qtinfo.html")); outfile.open(QIODevice::WriteOnly); outfile.write(html.toAscii()); outfile.close();  }
+    void on_saveButton_clicked(bool checked) { QFile outfile(QFileDialog::getSaveFileName(this, "Save output as", "/home/user/MyDocs/qtinfo.html")); outfile.open(QIODevice::WriteOnly); outfile.write(infoloader->resultAsHTML().toAscii()); outfile.close();  }
     void on_jsbinButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl("http://pastebin.com")); }
-    void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(text); }
+    void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(infoloader->resultAsText()); }
+    void showUI();
 
 private:
-    void loadInfo(QString key, QString libname, QString libfile, const char* infofunc); // pvt because of out
-    bool loadValues(QString library, QString defaultKey, const char* function); // pvt because of out, used by loadInfo
     QWidget * loadWidget(QString library, const char *function);
-    void addToTemplate(QString key, QString value);
-    void addToTemplate(QList<QPair<QString, QString> > list);
     Ui::MainWindow *ui;
-    QString html;
-    QString text;
-    QString rowstr;
-    QString sectionstr;
-    QTextStream out;
-    QStringList installedlibs;
-    QList<QPair<QString, QString> > rawpairs;
+    InfoLoader* infoloader;
 };
 
 #endif // MAINWINDOW_H

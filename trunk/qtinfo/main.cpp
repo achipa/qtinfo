@@ -10,6 +10,8 @@ int main(int argc, char *argv[])
 #else
     w.show();
 #endif
+//    a.processEvents();
+//    w.startLoading();
 
 
     return a.exec();

@@ -1,34 +1,64 @@
-Name: qtinfo
-Summary: Display runtime Qt (Quick) and System information
-Version: 2.1.0
-Release: 1
-License: <Enter your application's license here>
-Group: <Set your application's group here>
+Summary:   Display basic Qt-related information in an easy-to-report-to-developer way
+Name:      qtinfo
+Version:   2.1
+Release:   1
+Group:     Development/Tools
+License:   BSD
+URL:       https://projects.forum.nokia.com/qtinfo
+Source:    %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: qt-devel
+BuildRequires: qt-mobility-devel
+BuildRequires: libqtopengl-devel
+BuildRequires: libqtwebkit-devel
+
 %description
-<Insert longer, multi-line description
-here.>
+Display basic Qt-related information in an easy-to-report-to-developer way
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}
 
 %build
-# You can leave this empty for use with Qt Creator.
+qmake QtInfo.pro
+make %{?_smp_mflags}
+
 %install
-rm -rf %{buildroot}
-make INSTALL_ROOT=%{buildroot} install
+%{__rm} -rf $RPM_BUILD_ROOT
+qmake QtInfo.pro
+make %{?_smp_mflags} INSTALL_ROOT=%{buildroot} install
 
 %clean
-rm -rf %{buildroot}
+%{__rm} -rf $RPM_BUILD_ROOT
 
-BuildRequires: 
-# %define _unpackaged_files_terminate_build 0
 %files
-%defattr(-,root,root,-)/usr
-/opt
-# Add additional files to be included in the package here.
-%pre
-# Add pre-install scripts here.%post
-/sbin/ldconfig # For shared libraries
-%preun
-# Add pre-uninstall scripts here.%postun
-# Add post-uninstall scripts here.
+%defattr(-,root,root)
+#%{_bindir}/%{name}
+%{_datadir}/applications/%{name}.desktop
+/opt/qtinfo/bin/libglinfolib.so
+/opt/qtinfo/bin/libglinfolib.so.1
+/opt/qtinfo/bin/libglinfolib.so.1.0
+/opt/qtinfo/bin/libglinfolib.so.1.0.0
+/opt/qtinfo/bin/libmobilityinfolib.so
+/opt/qtinfo/bin/libmobilityinfolib.so.1
+/opt/qtinfo/bin/libmobilityinfolib.so.1.0
+/opt/qtinfo/bin/libmobilityinfolib.so.1.0.0
+/opt/qtinfo/bin/libmultimediainfolib.so
+/opt/qtinfo/bin/libmultimediainfolib.so.1
+/opt/qtinfo/bin/libmultimediainfolib.so.1.0
+/opt/qtinfo/bin/libmultimediainfolib.so.1.0.0
+/opt/qtinfo/bin/libqtquickinfolib.so
+/opt/qtinfo/bin/libqtquickinfolib.so.1
+/opt/qtinfo/bin/libqtquickinfolib.so.1.0
+/opt/qtinfo/bin/libqtquickinfolib.so.1.0.0
+/opt/qtinfo/bin/libsqlinfolib.so
+/opt/qtinfo/bin/libsqlinfolib.so.1
+/opt/qtinfo/bin/libsqlinfolib.so.1.0
+/opt/qtinfo/bin/libsqlinfolib.so.1.0.0
+/opt/qtinfo/bin/libwebkitinfolib.so
+/opt/qtinfo/bin/libwebkitinfolib.so.1
+/opt/qtinfo/bin/libwebkitinfolib.so.1.0
+/opt/qtinfo/bin/libwebkitinfolib.so.1.0.0
+/opt/qtinfo/bin/qtinfo
+/usr/share/themes/base/meegotouch/icons/qtinfo.svg
+
+

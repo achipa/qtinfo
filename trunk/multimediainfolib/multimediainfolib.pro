@@ -28,11 +28,11 @@ isEmpty(MOBILITY_VERSION) {
 
 MOBILITY += multimedia
 
+TARGET = multimediainfolib$$MOBILITY_MAJOR_VERSION$$MOBILITY_MINOR_VERSION
+
 symbian {
     #Build STDDLL
     CONFIG += stdbinary
-
-    TARGET = multimediainfolib$$MOBILITY_MAJOR_VERSION$$MOBILITY_MINOR_VERSION
 
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
@@ -55,11 +55,7 @@ unix:!symbian { # not funny
     # don't do this in your projects, we're trained professionals
 
     maemo5 {
-        contains(MOBILITY_MINOR_VERSION,2) {
-            TARGET = multimediainfolib12
-        } else : contains(MOBILITY_MINOR_VERSION,1) {
-            TARGET = multimediainfolib11
-        } else {
+        ! contains(MOBILITY_MINOR_VERSION,2): ! contains(MOBILITY_MINOR_VERSION,1) { # the last pass is with mobility 1.0, so we need to add to the package 1.1 and 1.2 that have been compiled in the previous passes
              extratarget.files = libmultimediainfolib11.so libmultimediainfolib12.so
              extratarget.path=/opt/qtinfo/bin
              INSTALLS += extratarget
