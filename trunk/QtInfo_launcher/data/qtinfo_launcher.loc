@@ -1,0 +1,12 @@
+/*
+============================================================================
+ Name		: QtInfo_launcher.mmp
+ Author	  : Lucian Tomuta
+ Copyright   : 2011 Forum Nokia
+ Description : Localisation strings for QtInfo Launcher.
+============================================================================
+*/
+
+
+#define STRING_r_caption_short "QtInfo"
+#define STRING_r_caption "Qt Info"

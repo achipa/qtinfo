@@ -36,7 +36,7 @@ symbian {
 
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
-    TARGET.UID3 = 0xE2141820
+    TARGET.UID3 = 0XA00002D6
     TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCALLOWDLLDATA = 1
     addFiles.sources = $${TARGET}.dll
