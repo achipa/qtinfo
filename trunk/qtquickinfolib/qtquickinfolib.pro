@@ -21,9 +21,9 @@ symbian {
 
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
-    TARGET.UID3 = 0XA00002D6
-    TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
+
     TARGET.EPOCALLOWDLLDATA = 1
+
     addFiles.sources = $${TARGET}.dll
     addFiles.path = !:/sys/bin
     DEPLOYMENT += addFiles
@@ -42,3 +42,5 @@ OTHER_FILES += \
 
 RESOURCES += \
     qtquickqmls.qrc
+
+include(../qtinfo_symbianplatsec.pri)

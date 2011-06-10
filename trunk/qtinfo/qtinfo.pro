@@ -21,8 +21,6 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 symbian {
-    TARGET.UID3 = 0xA00002D6
-    TARGET.CAPABILITY += LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 0x800000
     ICON=qtinfo.svg
@@ -58,3 +56,5 @@ unix:!symbian { # not funny
     target.path = /opt/qtinfo/bin
     INSTALLS += desktopfile icon target
 }
+
+include(../qtinfo_symbianplatsec.pri)
