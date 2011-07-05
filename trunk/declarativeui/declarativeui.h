@@ -7,6 +7,7 @@
 #include <QWidget>
 
 extern "C" {
-QWidget* declarativeUI(QList<QPair<QString, QString> > );
+QWidget* declarativeUI(QList<QPair<QString, QString> >, QObject* mainWindow );
+bool isQmlUiAvailable();
 }
 #endif

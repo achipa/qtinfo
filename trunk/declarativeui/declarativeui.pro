@@ -37,7 +37,10 @@ unix:!symbian: {
 }
 
 OTHER_FILES += \
-    main.qml
+    main.qml \
+    qml_symbian/main.qml \
+    qml_symbian/MainPage.qml \
+    qml_symbian/InfoView.qml
 
 RESOURCES += \
     qtquickqmls.qrc
