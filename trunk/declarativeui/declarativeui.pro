@@ -28,6 +28,12 @@ symbian {
 
     addFiles.sources = $${TARGET}.dll
     addFiles.path = !:/sys/bin
+
+    # Add more folders to ship with the application, here
+    folder_01.source = qml_symbian
+    folder_01.target = .
+    DEPLOYMENTFOLDERS = folder_01
+
     DEPLOYMENT += addFiles
 }
 
@@ -44,5 +50,16 @@ OTHER_FILES += \
 
 RESOURCES += \
     qtquickqmls.qrc
+
+for(deploymentfolder, DEPLOYMENTFOLDERS) {
+    item = item$${deploymentfolder}
+    itemsources = $${item}.sources
+    $$itemsources = $$eval($${deploymentfolder}.source)
+    itempath = $${item}.path
+    $$itempath= $$eval($${deploymentfolder}.target)
+    export($$itemsources)
+    export($$itempath)
+    DEPLOYMENT += $$item
+}
 
 include(../qtinfo_symbianplatsec.pri)

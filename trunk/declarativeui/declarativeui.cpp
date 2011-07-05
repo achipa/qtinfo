@@ -29,7 +29,7 @@ QWidget* declarativeUI(QList<QPair<QString, QString> > infoPairs, QObject* mainW
     view->rootContext()->setContextProperty("keyModel", QVariant::fromValue(keys));
     view->rootContext()->setContextProperty("valueModel", QVariant::fromValue(values));
 
-    view->setSource(QUrl::fromLocalFile("debug/qml_symbian/main.qml"));
+    view->setSource(QUrl::fromLocalFile("qml_symbian/main.qml"));
 
     return view;
 }

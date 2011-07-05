@@ -4,7 +4,7 @@
 
 symbian {
 
-    TARGET.UID3 = 0XA00002D6
+    TARGET.UID3 = 0xA00002D6
     TARGET.CAPABILITY = LocalServices NetworkServices ReadUserData UserEnvironment WriteUserData
 
 }
