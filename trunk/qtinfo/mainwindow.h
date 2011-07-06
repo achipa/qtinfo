@@ -9,6 +9,7 @@
 #include <QtGui/QApplication>
 #include <QTextStream>
 #include <QtGui/QFileDialog>
+#include <QDebug>
 #include "infoloader.h"
 
 namespace Ui {
@@ -40,6 +41,7 @@ public slots:
 
 private:
     QWidget * loadWidget(QString library, const char *function);
+    bool callBoolFunction(QString library, const char *function);
     Ui::MainWindow *ui;
     InfoLoader* infoloader;
 };

@@ -37,7 +37,6 @@
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt463/epoc32/release/gcce/urel/sqlinfolib.dll" - "!:\sys\bin\sqlinfolib.dll"
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt463/epoc32/release/gcce/urel/webkitinfolib.dll" - "!:\sys\bin\webkitinfolib.dll"
 
-
 ; Qt 4.7 build - libs
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt473/epoc32/release/gcce/urel/declarativeui.dll" - "!:\sys\bin\declarativeui.dll"
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt473/epoc32/release/gcce/urel/qtquickinfolib.dll" - "!:\sys\bin\qtquickinfolib.dll"
@@ -54,3 +53,9 @@
 ; Qt Mobility 1.2 (beta) - libs
 "c:/QtSDK/Symbian/SDKs/Symbian3Qt473_12b/epoc32/release/armv5/urel/mobilityinfolib12.dll" - "!:\sys\bin\mobilityinfolib12.dll"
 "c:/QtSDK/Symbian/SDKs/Symbian3Qt473_12b/epoc32/release/armv5/urel/multimediainfolib12.dll" - "!:\sys\bin\multimediainfolib12.dll"
+
+; Qt Quick Components based UI
+"c:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/release/armv5/urel/declarativeui.dll" - "!:\sys\bin\declarativeui.dll"
+"C:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/InfoView.qml" - "!:\private\a00002d6\qml_symbian\InfoView.qml"
+"C:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/main.qml" - "!:\private\a00002d6\qml_symbian\main.qml"
+"C:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/MainPage.qml" - "!:\private\a00002d6\qml_symbian\MainPage.qml"

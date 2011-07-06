@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/qml">
         <file>main.qml</file>
+        <file>qml_symbian/main.qml</file>
+        <file>qml_symbian/MainPage.qml</file>
+        <file>qml_symbian/InfoView.qml</file>
     </qresource>
 </RCC>

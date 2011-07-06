@@ -24,13 +24,24 @@ MainWindow::~MainWindow()
 
 QWidget* MainWindow::loadWidget(QString library, const char* function)
 {
-    typedef QWidget* (*fn)(QList<QPair<QString, QString> >);
+    typedef QWidget* (*fn)(QList<QPair<QString, QString> >, QObject*);
     fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/"+library), function);
     qDebug() << library <<  v;
     if (v) {
-        return v(infoloader->resultAsRawpairs());
+        return v(infoloader->resultAsRawpairs(), this);
     }
     return NULL;
+}
+
+bool MainWindow::callBoolFunction(QString library, const char *function)
+{
+    typedef bool (*fn)();
+    fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/"+library), function);
+    qDebug() << library <<  v;
+    if (v) {
+        return v();
+    }
+    return false;
 }
 
 void MainWindow::showUI()
@@ -42,20 +53,20 @@ void MainWindow::showUI()
     QTextStream sout(stdout);
     sout << infoloader->resultAsText();
 
-//  uncomment this to enable the future QML powered UI
-
-//    if (installedlibs.contains("QtDeclarative")) { // go for fancy declarative UI instead of QWidgets
-//        QWidget* widget = loadWidget("declarativeui", "declarativeUI");
-//        if (widget) {
-//            widget->setParent(ui->widget);
-//            ui->textBrowser->setVisible(false);
-//            ui->widget->setEnabled(true);
-//            ui->widget->setVisible(true);
-//    // Note that QML buttons should call the same methods as the auto-slot-connected buttons
-//        }
-//    } else {
-//        ui->widget->setVisible(false);
-//    }
+    // If QtDeclarative and Qt Quick Components are available, use QML UI
+    if (infoloader->isLoaded("QtDeclarative")) { // go for fancy declarative UI instead of QWidgets
+        if (callBoolFunction("declarativeui", "isQmlUiAvailable")) {
+            qDebug() << "loading QML UI";
+            QWidget* widget = loadWidget("declarativeui", "declarativeUI");
+            if (widget) {
+                ui->textBrowser->setVisible(false);
+                ui->widget->setEnabled(true);
+                ui->widget->setVisible(true);
+                widget->showFullScreen();
+                // Note that QML buttons should call the same methods as the auto-slot-connected buttons
+            }
+        }
+    }
 
 #ifdef Q_WS_MAEMO_5
     ui->closeButton->setVisible(false);

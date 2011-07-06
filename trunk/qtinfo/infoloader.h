@@ -23,6 +23,8 @@ public:
     QString resultAsText() { return text; }
     QList<QPair<QString, QString> > resultAsRawpairs() { return rawpairs; }
 
+    bool isLoaded(QString library) { return installedlibs.contains(library); }
+
     int divineMobilityVersion();
     static QString loadLib(QString libname);
 private:

@@ -64,7 +64,8 @@ void searchPlugin(QString path, QString plugin, QStringList& pluginList, QString
         pluginList.append(plugin);
 
         if (plugin == "Qt.labs.components" || plugin == "Qt.labs.components.native" ||
-            plugin == "com.nokia.symbian" || plugin == "com.nokia.meego")
+            plugin == "com.nokia.symbian" || plugin == "com.nokia.meego" ||
+            plugin == "com.nokia.extras")
         {
             qtComponentsList.append("<b>"+plugin+"</b>");
             QString qmldir = path+"/qmldir";
