@@ -19,7 +19,7 @@
 
 //  Constants
 const TUid KQtInfoAppUid = {0xA00002D6};
-_LIT(KMessage, "Failed to start QtInfo(%d).\nDo you have Qt installed?");
+_LIT(KMessage, "Failed to start QtInfo (%d).\nDo you have Qt installed?");
 
 //  Local Functions
 
