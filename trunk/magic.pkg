@@ -4,9 +4,9 @@
 
 ; SIS header: name, package uid, version
 ; using qtinfo's UID
-#{"QtInfo - R&D release"},(0xA00002D6),1,0,0
+#{"QtInfo - R&D release"},(0xA00002D6),3,0,0
 
-%{"Forum Nokia"}
+%{"The crazy bunch."}
 :"Forum Nokia"
 
 ; Manual PKG pre-rules from PRO files
@@ -33,12 +33,17 @@
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt463/epoc32/data/z/private/10003a3f/import/apps/qtinfo_reg.rsc" - "!:\private\10003a3f\import\apps\qtinfo_reg.rsc"
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt463/epoc32/data/z/resource/apps/qtinfo.mif"    - "!:\resource\apps\qtinfo.mif"
 
+; Qt Quick UI, S^3 Qt 4.7 build
+"c:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/release/armv5/urel/declarativeui.dll" - "!:\sys\bin\declarativeui.dll"
+"c:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/InfoView.qml" - "!:\private\a00002d6\qml_symbian\InfoView.qml"
+"c:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/main.qml" - "!:\private\a00002d6\qml_symbian\main.qml"
+"c:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/MainPage.qml" - "!:\private\a00002d6\qml_symbian\MainPage.qml"
+
 ; Base Qt 4.6.3 build - libs
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt463/epoc32/release/gcce/urel/sqlinfolib.dll" - "!:\sys\bin\sqlinfolib.dll"
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt463/epoc32/release/gcce/urel/webkitinfolib.dll" - "!:\sys\bin\webkitinfolib.dll"
 
 ; Qt 4.7 build - libs
-"c:/QtSDK/Symbian/SDKs/Symbian1Qt473/epoc32/release/gcce/urel/declarativeui.dll" - "!:\sys\bin\declarativeui.dll"
 "c:/QtSDK/Symbian/SDKs/Symbian1Qt473/epoc32/release/gcce/urel/qtquickinfolib.dll" - "!:\sys\bin\qtquickinfolib.dll"
 "c:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/release/armv5/urel/glinfolib.dll" - "!:\sys\bin\glinfolib.dll"
 
@@ -53,9 +58,3 @@
 ; Qt Mobility 1.2 (beta) - libs
 "c:/QtSDK/Symbian/SDKs/Symbian3Qt473_12b/epoc32/release/armv5/urel/mobilityinfolib12.dll" - "!:\sys\bin\mobilityinfolib12.dll"
 "c:/QtSDK/Symbian/SDKs/Symbian3Qt473_12b/epoc32/release/armv5/urel/multimediainfolib12.dll" - "!:\sys\bin\multimediainfolib12.dll"
-
-; Qt Quick Components based UI
-"c:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/release/armv5/urel/declarativeui.dll" - "!:\sys\bin\declarativeui.dll"
-"C:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/InfoView.qml" - "!:\private\a00002d6\qml_symbian\InfoView.qml"
-"C:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/main.qml" - "!:\private\a00002d6\qml_symbian\main.qml"
-"C:/QtSDK/Symbian/SDKs/Symbian3Qt473/epoc32/data/z/private/a00002d6/qml_symbian/MainPage.qml" - "!:\private\a00002d6\qml_symbian\MainPage.qml"
