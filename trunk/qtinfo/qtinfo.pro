@@ -22,7 +22,7 @@ FORMS    += mainwindow.ui
 
 symbian {
     TARGET.EPOCSTACKSIZE = 0x14000
-    TARGET.EPOCHEAPSIZE = 0x020000 0x800000
+    TARGET.EPOCHEAPSIZE = 0x020000 0x1000000
     ICON=qtinfo.svg
 
     # Hide the icon from the menu while maintaining the application registered
