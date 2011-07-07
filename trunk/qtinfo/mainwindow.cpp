@@ -47,11 +47,13 @@ bool MainWindow::callBoolFunction(QString library, const char *function)
 void MainWindow::showUI()
 {
     infoloader->run();
-    ui->textBrowser->setHtml(infoloader->resultAsHTML());
+
 //    ui->webView->setHtml(html,QUrl("qrc:/"));
 
     QTextStream sout(stdout);
     sout << infoloader->resultAsText();
+
+    bool qmlUI = false;
 
     // If QtDeclarative and Qt Quick Components are available, use QML UI
     if (infoloader->isLoaded("QtDeclarative")) { // go for fancy declarative UI instead of QWidgets
@@ -59,6 +61,7 @@ void MainWindow::showUI()
             qDebug() << "loading QML UI";
             QWidget* widget = loadWidget("declarativeui", "declarativeUI");
             if (widget) {
+                qmlUI = true;
                 ui->textBrowser->setVisible(false);
                 ui->widget->setEnabled(true);
                 ui->widget->setVisible(true);
@@ -67,6 +70,14 @@ void MainWindow::showUI()
             }
         }
     }
+
+    if (!qmlUI) {
+        ui->textBrowser->setHtml(infoloader->resultAsHTML());
+    } else {
+        delete ui->textBrowser;
+        ui->textBrowser = 0;
+    }
+
 
 #ifdef Q_WS_MAEMO_5
     ui->closeButton->setVisible(false);
