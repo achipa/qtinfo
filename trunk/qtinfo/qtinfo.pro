@@ -29,7 +29,7 @@ symbian {
     # this allows the laucher icon to be the only one visible
     # while the laucher can still find the GUI app in the list of installed apps.
     # comment out when the launcher is not used
-    #RSS_RULES += "hidden = KAppIsHidden;"
+    RSS_RULES += "hidden = KAppIsHidden;"
 }
 
 contains(QMAKE_HOST.os, Linux): {
