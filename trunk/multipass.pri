@@ -3,9 +3,7 @@
 symbian:TARGET.UID3=0xA1234567
 
 
-PASS=1
-
-
+PASS=2
 
 contains(PASS,1) {
 	maemo5 {

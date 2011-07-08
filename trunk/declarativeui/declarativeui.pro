@@ -38,15 +38,23 @@ symbian {
 }
 
 unix:!symbian: {
+    !maemo5: {
+	    # Add more folders to ship with the application, here
+        folder_01.files = qml_meegoharmattan/*
+        folder_01.path = /opt/qtinfo/qml
+    }
     target.path = /opt/qtinfo/bin
-    INSTALLS += target
+    INSTALLS += target folder_01
 }
 
 OTHER_FILES += \
     main.qml \
     qml_symbian/main.qml \
     qml_symbian/MainPage.qml \
-    qml_symbian/InfoView.qml
+    qml_symbian/InfoView.qml \
+    qml_meegoharmattan/main.qml \
+    qml_meegoharmattan/MainPage.qml \
+    qml_meegoharmattan/InfoView.qml
 
 RESOURCES += \
     qtquickqmls.qrc

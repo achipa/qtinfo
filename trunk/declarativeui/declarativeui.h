@@ -9,5 +9,6 @@
 extern "C" {
 QWidget* declarativeUI(QList<QPair<QString, QString> >, QObject* mainWindow );
 bool isQmlUiAvailable();
+bool checkQml(QLatin1String qml);
 }
 #endif

@@ -29,14 +29,17 @@ QWidget* declarativeUI(QList<QPair<QString, QString> > infoPairs, QObject* mainW
     view->rootContext()->setContextProperty("keyModel", QVariant::fromValue(keys));
     view->rootContext()->setContextProperty("valueModel", QVariant::fromValue(values));
 
+#ifdef Q_OS_SYMBIAN
     view->setSource(QUrl::fromLocalFile("qml_symbian/main.qml"));
+#else
+    view->setSource(QUrl::fromLocalFile(qApp->applicationDirPath() + "/../qml/main.qml"));
+#endif
 
     return view;
 }
 
-bool isQmlUiAvailable()
+bool checkQml(QLatin1String qml)
 {
-    QLatin1String qml("import QtQuick 1.0\nimport com.nokia.symbian 1.0\nimport com.nokia.extras 1.0\nWindow {}");
 
     QDeclarativeEngine engine;
     QDeclarativeComponent component(&engine);
@@ -51,6 +54,15 @@ bool isQmlUiAvailable()
         // Something is wrong, at least output errors
         qDebug() << component.errors();
     }
+    return false;
+}
+
+bool isQmlUiAvailable()
+{
+    if (checkQml(QLatin1String("import QtQuick 1.0\nimport com.nokia.symbian 1.0\nimport com.nokia.extras 1.0\nWindow {}")))
+            return true;
+    if (checkQml(QLatin1String("import QtQuick 1.0\nimport com.nokia.meego 1.0\nWindow {}")))
+            return true;
     return false;
 }
 

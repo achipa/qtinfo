@@ -5,6 +5,7 @@
 #include <QTextStream>
 #include <QDesktopServices>
 #include <QTimer>
+#include <QStatusBar>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,6 +13,12 @@ MainWindow::MainWindow(QWidget *parent) :
     infoloader(new InfoLoader())
 {
     ui->setupUi(this);
+    ui->clipboardButton->setVisible(false);
+    ui->emailButton->setVisible(false);
+    ui->closeButton->setVisible(false);
+    ui->jsbinButton->setVisible(false);
+    ui->saveButton->setVisible(false);
+//    this->statusBar()->setVisible(false);
 //    connect(infoloader, SIGNAL(finished()), SLOT(showUI()));
     connect(infoloader, SIGNAL(newInfoAvailable(QString)), SLOT(updateLoadScreen(QString)), Qt::DirectConnection);
     QTimer::singleShot(0,this,SLOT(showUI()));
@@ -69,6 +76,15 @@ void MainWindow::showUI()
                 // Note that QML buttons should call the same methods as the auto-slot-connected buttons
             }
         }
+    } else {
+//        this->statusBar()->setVisible(true);
+        ui->emailButton->setVisible(true);
+        ui->jsbinButton->setVisible(true);
+        ui->clipboardButton->setVisible(true);
+        ui->saveButton->setVisible(true);
+#ifndef Q_WS_MAEMO_5
+        ui->closeButton->setVisible(true); // maemo5 has X provided by the window manager
+#endif
     }
 
     if (!qmlUI) {
@@ -77,11 +93,6 @@ void MainWindow::showUI()
         delete ui->textBrowser;
         ui->textBrowser = 0;
     }
-
-
-#ifdef Q_WS_MAEMO_5
-    ui->closeButton->setVisible(false);
-#endif
 }
 
 void MainWindow::updateLoadScreen(QString str)

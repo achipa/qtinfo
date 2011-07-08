@@ -1,12 +1,12 @@
 Summary: Display runtime Qt (Quick) and System information
 Name: qtinfo
-Version: 2.2.0
+Version: 3.0.0
 Release:   1
 Group:     Development/Tools
 License:   BSD
 URL:       https://projects.forum.nokia.com/qtinfo
 Source:    %{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRoot: /tmp/%{name}-%{version}-%{release}-root
 BuildRequires: qt-devel
 BuildRequires: qt-mobility-devel
 BuildRequires: libqtopengl-devel
