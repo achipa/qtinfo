@@ -1,6 +1,6 @@
-Summary:   Display basic Qt-related information in an easy-to-report-to-developer way
-Name:      qtinfo
-Version:   2.1
+Summary: Display runtime Qt (Quick) and System information
+Name: qtinfo
+Version: 2.2.0
 Release:   1
 Group:     Development/Tools
 License:   BSD
