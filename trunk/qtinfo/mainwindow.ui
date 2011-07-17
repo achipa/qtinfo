@@ -30,6 +30,13 @@ p, li { white-space: pre-wrap; }
      </widget>
     </item>
     <item>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QWidget" name="widget" native="true">
       <property name="enabled">
        <bool>false</bool>

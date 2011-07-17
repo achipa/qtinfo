@@ -54,7 +54,10 @@ OTHER_FILES += \
     qml_symbian/InfoView.qml \
     qml_meegoharmattan/main.qml \
     qml_meegoharmattan/MainPage.qml \
-    qml_meegoharmattan/InfoView.qml
+    qml_meegoharmattan/InfoView.qml \
+    qml_desktop/main.qml \
+    qml_meegoux/main.qml \
+    qml_nextbillion/main.qml
 
 RESOURCES += \
     qtquickqmls.qrc

@@ -112,6 +112,9 @@ void InfoLoader::run()
     qtmobilitylibs << "QtVersit";
     qtlibs.append(qtmobilitylibs);
 
+    int progressTotalSteps = qtlibs.count() + 11; // 11 = number of loadInfos we're going to do later. #automateme
+    int progressStep = 0;
+
     foreach(QString libname, qtlibs) {
         emit newInfoAvailable(QString("Locating %0...").arg(libname));
         QString libfilename = loadLib(libname);
@@ -122,6 +125,7 @@ void InfoLoader::run()
         } else {
             emit newInfoAvailable(QString("Not found"));
         }
+        emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
     }
     addToTemplate(key, value);
 
@@ -143,33 +147,43 @@ void InfoLoader::run()
 
     emit newInfoAvailable("Loading systeminfo...");
     loadInfo("Mobility", "QtSystemInfo", QString("mobilityinfolib%0").arg(libsuffix), "mobilityInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
+
     emit newInfoAvailable(QString("Loading multimediakit (%0)...").arg(libsuffix));
     loadInfo("MultimediaKit", "QtMultimediaKit", QString("multimediainfolib%0").arg(libsuffix), "multimediaInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading declarative...");
     loadInfo("Qt Quick", "QtDeclarative", "qtquickinfolib", "qtQuickInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading OpenGL...");
     loadInfo("OpenGL", "QtOpenGL", "glinfolib", "GLInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading webkit...");
     loadInfo("WebKit", "QtWebKit", "webkitinfolib", "webkitInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading sql...");
     loadInfo("SQL", "QtSql", "sqlinfolib", "sqlInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Determining default paths...");
     key = "Library path";
     value = QLibraryInfo::location(QLibraryInfo::LibrariesPath);
     addToTemplate(key, value);
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     key = "Plugin path";
     value = QLibraryInfo::location(QLibraryInfo::PluginsPath);
     addToTemplate(key, value);
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     key = "Import path";
     value = QLibraryInfo::location((QLibraryInfo::LibraryLocation)11); // QLibraryInfo::ImportsPath == 11, but not available in Qt4.6
     addToTemplate(key, value);
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Determining image drivers...");
     key = "Image formats";
@@ -180,6 +194,7 @@ void InfoLoader::run()
         valuelist << fmtstr;
     }
     addToTemplate(key, valuelist.join(", "));
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Determining system fonts...");
     QList<QPair<QString, QString> > list;
@@ -198,6 +213,7 @@ void InfoLoader::run()
     }
     list.append(QPair<QString,QString>("Standard sizes", valuelist.join(", ")));
     addToTemplate(list);
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
 
 }

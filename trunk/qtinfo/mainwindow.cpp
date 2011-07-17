@@ -10,7 +10,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    infoloader(new InfoLoader())
+    infoloader(new InfoLoader(this))
 {
     ui->setupUi(this);
     ui->clipboardButton->setVisible(false);
@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    this->statusBar()->setVisible(false);
 //    connect(infoloader, SIGNAL(finished()), SLOT(showUI()));
     connect(infoloader, SIGNAL(newInfoAvailable(QString)), SLOT(updateLoadScreen(QString)), Qt::DirectConnection);
+    connect(infoloader, SIGNAL(progressChange(int)), ui->progressBar, SLOT(setValue(int)), Qt::DirectConnection);
     QTimer::singleShot(0,this,SLOT(showUI()));
 }
 
@@ -60,6 +61,7 @@ void MainWindow::showUI()
     QTextStream sout(stdout);
     sout << infoloader->resultAsText();
 
+    ui->progressBar->setVisible(false);
     bool qmlUI = false;
 
     // If QtDeclarative and Qt Quick Components are available, use QML UI

@@ -14,6 +14,7 @@ public:
 
 signals:
     void newInfoAvailable(QString str);
+    void progressChange(int percent);
 
 public slots:
 
@@ -27,6 +28,7 @@ public:
 
     int divineMobilityVersion();
     static QString loadLib(QString libname);
+
 private:
     QString html;
     QString text;

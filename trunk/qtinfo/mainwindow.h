@@ -23,7 +23,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
 //    void startLoading() { infoloader->start(); }
 //    void startLoading() { infoloader->run(); showUI(); }
 
@@ -44,6 +43,7 @@ private:
     bool callBoolFunction(QString library, const char *function);
     Ui::MainWindow *ui;
     InfoLoader* infoloader;
+
 };
 
 #endif // MAINWINDOW_H
