@@ -7,6 +7,8 @@
 #include <QTimer>
 #include <QStatusBar>
 
+#include "qplatformdefs.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -44,11 +46,22 @@ QWidget* MainWindow::loadWidget(QString library, const char* function)
 bool MainWindow::callBoolFunction(QString library, const char *function)
 {
     typedef bool (*fn)();
+#ifdef MEEGO_EDITION_HARMATTAN
+    fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/lib"+library), function);
+#else
     fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/"+library), function);
-    qDebug() << library <<  v;
-    if (v) {
+#endif
+//    qDebug() << "calling " << library << function << v;
+    QTextStream sout(stdout);
+    sout << "calling ";
+    sout << library;
+    sout << function << endl;
+//    sout << v;
+    if (v != 0) {
         return v();
     }
+    sout << "Could not resolve func/lib " << qApp->applicationDirPath() << "/lib" << library << " " << infoloader->loadLib(qApp->applicationDirPath()+"/lib"+library) << " " << function << endl;
+//    sout << QLibrary::errorString() << endl;
     return false;
 }
 
@@ -66,8 +79,9 @@ void MainWindow::showUI()
 
     // If QtDeclarative and Qt Quick Components are available, use QML UI
     if (infoloader->isLoaded("QtDeclarative")) { // go for fancy declarative UI instead of QWidgets
+        sout << "Declarative module present, contemplating QML UI";
         if (callBoolFunction("declarativeui", "isQmlUiAvailable")) {
-            qDebug() << "loading QML UI";
+            sout << "loading QML UI";
             QWidget* widget = loadWidget("declarativeui", "declarativeUI");
             if (widget) {
                 qmlUI = true;

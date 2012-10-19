@@ -277,13 +277,19 @@ QString InfoLoader::loadLib(QString libname)
         return QString("QtBearer");
 #endif
     QLibrary lib(libname);
+    QTextStream sout(stdout);
+    sout << lib.errorString() << endl;
 //    qDebug() << lib.errorString();
     if (!lib.load()) {
         foreach (QString prefix, QStringList() << "" << "lib") {
             foreach(QString version, QStringList() << "" << "1" << "2" << "3" << "4" << "5") {
                 lib.setFileNameAndVersion(prefix + libname, version.toInt()); // Linux naming
                 if (lib.load()) break;
+    sout << lib.errorString() << endl;
+        qDebug() << lib.errorString();
                 lib.setFileName(prefix + libname + version); // Windows and Symbian naming
+    sout << lib.errorString() << endl;
+        qDebug() << lib.errorString();
                 if (lib.load()) break;
             }
             if (lib.isLoaded()) break;
@@ -297,6 +303,8 @@ QString InfoLoader::loadLib(QString libname)
         lib.unload();
         return lib.fileName();
     } else {
+    sout << lib.errorString() << endl;
+        qDebug() << lib.errorString();
         return QString();
     }
 }

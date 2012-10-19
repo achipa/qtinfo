@@ -1,97 +1,108 @@
 import QtQuick 1.0
 import com.nokia.meego 1.0
 
+
 ListView {
     id: infoList
-    model: keyModel
+    model: sectionModel
+//    model: keyModel
     clip: true
-    delegate:
-        Item {
-            id: listItem
-            property bool section: modelData == "section"
-            height: 88
-            width: parent.width
+    cacheBuffer: 2000
+    delegate: valueDelegate
+    section.delegate: sectionDelegate
+    section.property: "section"
+//    section.property: modelData
+Component {
+    id: sectionDelegate
+    Rectangle {
+        id: sectionRect
+        color: "#2e84e5"
+        width: listItem.width
+        height: sectionText.height * 2
 
-            BorderImage {
-                id: background
-                anchors.fill: parent
-                // Fill page borders
-//                anchors.leftMargin: -listPage.anchors.leftMargin
-//                anchors.rightMargin: -listPage.anchors.rightMargin
-                visible: mouseArea.pressed
-                source: "image://theme/meegotouch-list-background-pressed-center"
-            }
+        Label {
+            anchors.top: parent
+            anchors.topMargin: sectionText.height
+            id: sectionText
+            text: section
+//            text: valueModel[index]
+//                            font.family: "Nokia Pure Text"
+//                            font.weight: Font.Bold
+            font.pixelSize: 48
+            color: "#ffffff"
+        }
+    }
+}
 
-            Flow {
+Component {
+    id: valueDelegate
+//        anchors.fill: parent
+//        anchors.margins: 4
+    Flow {
 //            Row {
 //                id: row
-                anchors.fill: parent
-                anchors.margins: 4
-                spacing: 2
+        spacing: 2
 //                height: sectionrect.height + mainText.height + subText.height
 
 //                Column {
 //                    anchors.verticalCenter: parent.verticalCenter
 
-                    Rectangle {
-                        id: sectionRect
-                        color: "#2e84e5"
-                        visible: section
-                        width: listItem.width
-                        height: sectionText.height * 2
 
-                        Label {
-                            anchors.top: parent
-                            anchors.topMargin: sectionText.height
-                            id: sectionText
-                            text: valueModel[index]
-//                            font.family: "Nokia Pure Text"
-//                            font.weight: Font.Bold
-                            font.pixelSize: 48
-                            color: "#ffffff"
-                        }
-                    }
-
-                    Label {
-                        anchors.top: sectionRect.bottom
-                        width: listItem.width
-                        id: mainText
-                        text: modelData
-                        font.weight: Font.Bold
-                        font.pixelSize: 26
-                        visible: !section
-                    }
-
-                    Label {
-                        anchors.top: mainText.bottom
-                        width: listItem.width
-                        id: subText
-                        text: valueModel[index]
-                        font.weight: Font.Light
-                        font.pixelSize: 22
-                        color: "#cc6633"
-                        wrapMode: "WordWrap"
-
-                        visible: !section
-//                        visible: text != ""
-                    }
-//                }
-            }
-
-//             Image {
-//                 source: "image://theme/icon-m-common-drilldown-arrow" + (theme.inverted ? "-inverse" : "")
-//                 anchors.right: parent.right;
-//                 anchors.verticalCenter: parent.verticalCenter
-//             }
-
-            MouseArea {
-                id: mouseArea
-                anchors.fill: background
-                onClicked: {
-//                    listPage.openFile(page)
-                }
-            }
+        Label {
+//            width: listItem.width
+            id: mainText
+            text: key
+//            text: modelData
+            font.weight: Font.Bold
+            font.pixelSize: 26
         }
+
+        Label {
+            anchors.top: mainText.bottom
+//            width: listItem.width
+            id: subText
+            text: value
+//            text: valueModel[index]
+            font.weight: Font.Light
+            font.pixelSize: 22
+            color: "#cc6633"
+            wrapMode: "WordWrap"
+
+        }
+//                }
+    }
+}
+//        Item {
+//            id: listItem
+//            property bool section: modelData == "section"
+////            height: 88
+//            width: parent.width
+
+//            BorderImage {
+//                id: background
+//                anchors.fill: parent
+//                // Fill page borders
+////                anchors.leftMargin: -listPage.anchors.leftMargin
+////                anchors.rightMargin: -listPage.anchors.rightMargin
+//                visible: mouseArea.pressed
+//                source: "image://theme/meegotouch-list-background-pressed-center"
+//            }
+
+
+////             Image {
+////                 source: "image://theme/icon-m-common-drilldown-arrow" + (theme.inverted ? "-inverse" : "")
+////                 anchors.right: parent.right;
+////                 anchors.verticalCenter: parent.verticalCenter
+////             }
+
+//            MouseArea {
+//                id: mouseArea
+//                anchors.fill: background
+//                onClicked: {
+////                    listPage.openFile(page)
+//                }
+//            }
+//        }
 //        ListItem {
 //        id: listItem
 //        property bool section: modelData == "section"
