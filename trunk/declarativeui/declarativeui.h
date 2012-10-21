@@ -4,7 +4,7 @@
 #include <QList>
 #include <QPair>
 #include <QString>
-#include <QWidget>
+
 
 extern "C" {
 QWidget* declarativeUI(QList<QPair<QString, QString> >, QObject* mainWindow );

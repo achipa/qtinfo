@@ -6,16 +6,18 @@
 
 QStringList keys;
 QStringList values;
-QList<QObject*> dataList;
+/* QList<QObject*> dataList;
 
-class DataObject : public QObject {
+class QataObject : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QString key READ key WRITE setKey)
     Q_PROPERTY(QString value READ value WRITE setValue)
     Q_PROPERTY(QString section READ section WRITE setSection)
 public:
-    DataObject (QString k, QString v, QString s) : m_key(k), m_value(v), m_section(s) {}
+    QataObject () {}
+    QataObject (QString k, QString v, QString s) : m_key(k), m_value(v), m_section(s) {}
+    ~QataObject () {}
     QString key() { return m_key; }
     QString value() { return m_value; }
     QString section() { return m_section; }
@@ -26,6 +28,7 @@ public slots:
 private:
     QString m_key, m_value, m_section;
 };
+*/
 QWidget* declarativeUI(QList<QPair<QString, QString> > infoPairs, QObject* mainWindow)
 {
     QDeclarativeView* view = new QDeclarativeView();
@@ -42,7 +45,7 @@ QWidget* declarativeUI(QList<QPair<QString, QString> > infoPairs, QObject* mainW
         if (infoPair.first == "Section") {
             section = infoPair.second;
         } else {
-            dataList.append(new DataObject(infoPair.first, infoPair.second, section));
+//            dataList.append(new QataObject(infoPair.first, infoPair.second, section));
         }
         keys.append(infoPair.first);
         values.append(infoPair.second);
@@ -51,7 +54,7 @@ QWidget* declarativeUI(QList<QPair<QString, QString> > infoPairs, QObject* mainW
     view->rootContext()->setContextProperty("MainWindow", mainWindow);
     view->rootContext()->setContextProperty("keyModel", QVariant::fromValue(keys));
     view->rootContext()->setContextProperty("valueModel", QVariant::fromValue(values));
-    view->rootContext()->setContextProperty("sectionModel", QVariant::fromValue(dataList));
+//    view->rootContext()->setContextProperty("sectionModel", QVariant::fromValue(dataList));
 
 #ifdef Q_OS_SYMBIAN
     view->setSource(QUrl::fromLocalFile("qml_symbian/main.qml"));
