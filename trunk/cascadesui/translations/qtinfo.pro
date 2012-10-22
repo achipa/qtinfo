@@ -1,0 +1,1 @@
+include (../qtinfo.pro)
