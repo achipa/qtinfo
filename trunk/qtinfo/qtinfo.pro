@@ -10,9 +10,18 @@ QT       += core gui
 TARGET = qtinfo
 TEMPLATE = app
 
+SOURCES += main.cpp
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+qnx {
+# Cant switch UIs on BB10 so have to start with cascades upfront
+    SOURCES -= main.cpp
+    SOURCES += maincascades.cpp
+    CONFIG += cascades
+    LIBS   += -lbbdata
+
+}
+
+SOURCES += mainwindow.cpp \
     infoloader.cpp
 
 HEADERS  += mainwindow.h \
