@@ -1,6 +1,6 @@
 // List with context menu project template
-#ifndef Qtinfo_HPP_
-#define Qtinfo_HPP_
+#ifndef QtInfo_HPP_
+#define QtInfo_HPP_
 
 #include <QObject>
 
@@ -11,12 +11,12 @@ namespace bb { namespace cascades { class Application; }}
  *
  *Use this object to create and init app UI, to create context objects, to register the new meta types etc.
  */
-class Qtinfo : public QObject
+class QtInfo : public QObject
 {
     Q_OBJECT
 public:
-    Qtinfo(bb::cascades::Application *app);
-    virtual ~Qtinfo() {}
+    QtInfo(bb::cascades::Application *app);
+    virtual ~QtInfo() {}
 };
 
-#endif /* Qtinfo_HPP_ */
+#endif /* QtInfo_HPP_ */
