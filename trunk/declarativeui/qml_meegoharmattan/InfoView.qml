@@ -30,6 +30,7 @@ Rectangle {
 
     Component {
             id: sectionHeading
+
             Rectangle {
                 width: container.width
                 height: childrenRect.height * 2
@@ -96,7 +97,7 @@ Rectangle {
 //                font.weight: Font.Bold
                 font.pixelSize: 22
 
-                text: value
+                text: value + "<BR>"
                 wrapMode: Text.Wrap
             }
 
