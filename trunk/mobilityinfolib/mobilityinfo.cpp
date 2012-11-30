@@ -1,12 +1,19 @@
 #include "mobilityinfo.h"
-#include <qmobilityglobal.h>
+
+
+
 #include <QStringList>
+#ifndef Q_OS_BLACKBERRY
+#include <qmobilityglobal.h>
 #include <QSystemInfo>
 #include <QSystemDisplayInfo>
 #include <QSystemStorageInfo>
 #include <QSystemNetworkInfo>
 #include <QSystemDeviceInfo>
 #include <QDesktopWidget>
+#else
+#include <QtMobility/qmobilityglobal.h>
+#endif
 #include <QSensor>
 // #include <QtServiceFramework/QServiceManager>
 
@@ -14,14 +21,32 @@ QTM_USE_NAMESPACE
 
 QList<QPair<QString, QString> > mobilityInfo()
 {
-    QSystemInfo si;
     QList<QPair<QString, QString> > info;
     QString value;
+    QStringList valuelist;
+
+#ifdef Q_OS_BLACKBERRY
+    info.append(QPair<QString,QString>("section", "Mobility"));
+
+    info.append(QPair<QString,QString>("Version", QTM_VERSION_STR ));
+
+
+    foreach (QByteArray sensorname, QSensor::sensorTypes()) {
+        valuelist << QString(sensorname);
+    }
+    if (!valuelist.isEmpty())  info.append(QPair<QString,QString>("Sensors", valuelist.join(", ")));
+    valuelist.clear();
+
+    valuelist << "Provided via platform specific BB classes, not the Mobility APIs";
+    info.append(QPair<QString,QString>("Hardware features", valuelist.join(", ")));
+
+#else
 
 //    hmm, segfaults on my desktop 1.2
 //    QSystemDeviceInfo qsdei;
 //    info.append(QPair<QString,QString>("Device", QString("%0 %1 (%2)").arg(qsdei.manufacturer()).arg(qsdei.model()).arg(qsdei.productName())));
 
+    QSystemInfo si;
     value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
     info.append(QPair<QString,QString>("OS / Firmware", value));
 
@@ -42,7 +67,6 @@ QList<QPair<QString, QString> > mobilityInfo()
         value = si.version((QSystemInfo::Version)4);
     info.append(QPair<QString,QString>("Version", value));
 
-    QStringList valuelist;
     QSystemInfo qsi;
     if (qsi.hasFeatureSupported(QSystemInfo::BluetoothFeature)) valuelist << "Bluetooth";
     if (qsi.hasFeatureSupported(QSystemInfo::CameraFeature)) valuelist << "Camera";
@@ -83,6 +107,7 @@ QList<QPair<QString, QString> > mobilityInfo()
     }
 
 
+#endif
 
     return info;
 }

@@ -13,10 +13,17 @@ SUBDIRS = glinfolib \
 qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib sqlinfolib multimediainfolib
 
 !contains(QT_VERSION, ^4\\.[0-6]\\..*) {
-
-SUBDIRS += declarativeui qtquickinfolib
-
-qtinfo.depends += declarativeui qtquickinfolib
+    SUBDIRS += qtquickinfolib
+    qtinfo.depends += qtquickinfolib
+    !qnx {
+        SUBDIRS += declarativeui 
+        qtinfo.depends += declarativeui 
+    } else {
+        SUBDIRS += cascadesui bb10infolib
+        qtinfo.depends += cascadesui bb10infolib
+        SUBDIRS += webkitinfolib
+        qtinfo.depends += webkitinfolib
+    }
 }
 else  {
 symbian: {
@@ -24,7 +31,6 @@ symbian: {
     qtinfo.depends -= glinfolibs
     }
 }
-
 
 OTHER_FILES += \
     qtc_packaging/debian_fremantle/rules \

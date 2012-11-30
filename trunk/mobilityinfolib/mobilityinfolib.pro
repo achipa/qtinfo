@@ -26,7 +26,8 @@ isEmpty(MOBILITY_VERSION) {
     MOBILITY_PATCH_VERSION=2
 }
 
-MOBILITY += systeminfo sensors # serviceframework
+MOBILITY += sensors # serviceframework
+contains(MOBILITY_CONFIG,systeminfo): MOBILITY += systeminfo     # because blackberry is special
 
 TARGET = mobilityinfolib$$MOBILITY_MAJOR_VERSION$$MOBILITY_MINOR_VERSION
 
