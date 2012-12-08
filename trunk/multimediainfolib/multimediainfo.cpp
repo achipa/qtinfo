@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <qaudio.h>
 #include <qaudiodeviceinfo.h>
+#include <QAudioCaptureSource>
 #if QTM_VERSION >= 0x010100
 #include <qcamera.h>
 #endif
@@ -40,11 +41,17 @@ QList<QPair<QString, QString> > multimediaInfo()
 
     // "real" audio codecs are actually visible under the QMediaRecorder, so we'll check that under the video section
 
+//    if (1) {
+//        QAudioCaptureSource* audioSource = new QAudioCaptureSource;
+//        QMediaRecorder audiomediarec(audioSource);
+//        info.append(QPair<QString,QString>("Supported inputs", QStringList(audioSource->audioInputs()).join(",").replace("audio/","")));
+//        info.append(QPair<QString,QString>("Default input codecs", audioSource->defaultAudioInput()));
+
     if (!QCamera::availableDevices().isEmpty()) {
         QCamera audiocam(QCamera::availableDevices().at(0));
         QMediaRecorder audiomediarec(&audiocam);
-        info.append(QPair<QString,QString>("Supported codecs", audiomediarec.supportedAudioCodecs().join(",").replace("audio/","")));
 
+        info.append(QPair<QString,QString>("Supported codecs", audiomediarec.supportedAudioCodecs().join(",").replace("audio/","")));
         info.append(QPair<QString,QString>("section", "MultimediaKit Video"));
         foreach(QByteArray camname, QCamera::availableDevices()) {
             devices <<  QCamera::deviceDescription(camname);
@@ -83,6 +90,11 @@ QList<QPair<QString, QString> > multimediaInfo()
                 }
             }
         }
+    } else {
+        // add empty section just for completeness' sake
+        info.append(QPair<QString,QString>("Supported codecs", "N/A")); // for the audio block we started above
+        info.append(QPair<QString,QString>("section", "MultimediaKit Video"));
+        info.append(QPair<QString,QString>("Supported codecs", "N/A"));
     }
     devices.clear();
 #endif

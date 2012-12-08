@@ -5,6 +5,9 @@
 
 QString qtQuickVersion()
 {
+#ifdef Q_OS_BLACKBERRY
+    return "Could not determine Qt Quick version";
+#endif
     QDeclarativeView view;
     view.setSource(QUrl("qrc:///qml/qtquick20.qml"));
     if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "2.0";

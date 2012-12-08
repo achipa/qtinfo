@@ -16,6 +16,7 @@ maemo5 {
 } else {
     CONFIG += mobility
     load(mobilityconfig)
+    contains(MOBILITY_MAJOR_VERSION,1) : message(Mobility $$MOBILITY_VERSION detected with modules: $$MOBILITY_CONFIG)
 }
 
 isEmpty(MOBILITY_VERSION) {

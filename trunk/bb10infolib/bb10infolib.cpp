@@ -1,91 +1,89 @@
-#include "mobilityinfo.h"
+#include "bb10infolib.h"
 
-
-#include <qmobilityglobal.h>
-
+#include <bb/platform/PlatformInfo>
+#include <bb/device/HardwareInfo>
+#include <bb/MemoryInfo>
+#include <bb/device/DisplayInfo>
+#include <bb/device/CellularNetworkInfo>
+#include <bb/device/CellularRadioInfo>
+#include <bb/device/SimCardInfo>
 #include <QStringList>
-#include <QSystemInfo>
-#include <QSystemDisplayInfo>
-#include <QSystemStorageInfo>
-#include <QSystemNetworkInfo>
-#include <QSystemDeviceInfo>
-#include <QDesktopWidget>
-#include <QSensor>
-// #include <QtServiceFramework/QServiceManager>
 
-QTM_USE_NAMESPACE
 
-QList<QPair<QString, QString> > mobilityInfo()
+QList<QPair<QString, QString> > bb10Info()
 {
     QList<QPair<QString, QString> > info;
+    QStringList valuelist;
     QString value;
 
 //    hmm, segfaults on my desktop 1.2
 //    QSystemDeviceInfo qsdei;
 //    info.append(QPair<QString,QString>("Device", QString("%0 %1 (%2)").arg(qsdei.manufacturer()).arg(qsdei.model()).arg(qsdei.productName())));
 
-    QSystemInfo si;
-    value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
-    info.append(QPair<QString,QString>("OS / Firmware", value));
+//    QSystemInfo si;
+//    value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
+//    info.append(QPair<QString,QString>("OS / Firmware", value));
 
-    QDesktopWidget qdw;
-    QSystemDisplayInfo qsdi;
-    for (int i=0; i<qdw.screenCount() ; i++) {
-        QRect sg = qdw.screenGeometry(i);
-// DPI info needs mobility 1.2
-//        info.append(QPair<QString,QString>(QString("Screen (%0)").arg(i), QString("%0x%1, %2 DPI, %3b").arg(sg.width()).arg(sg.height()).arg(qsdi.getDPIWidth(i)).arg(qsdi.colorDepth(i))));
-        info.append(QPair<QString,QString>(QString("Screen (%0)").arg(i), QString("%0x%1, %2b").arg(sg.width()).arg(sg.height()).arg(qsdi.colorDepth(i))));
+    bb::platform::PlatformInfo pi;
+    info.append(QPair<QString,QString>("OS / Firmware", "BlackBerry10 " + pi.osVersion()));
+
+    info.append(QPair<QString,QString>("section", "BB10 Device Info"));
+
+    bb::MemoryInfo mi;
+    info.append(QPair<QString,QString>("Total memory", QString::number(mi.totalDeviceMemory() / 1024 / 1024) + " MB"));
+
+    bb::device::HardwareInfo hi;
+
+    if (!hi.pin().isEmpty()) info.append(QPair<QString,QString>("PIN", hi.pin()));
+    if (!hi.serialNumber().isEmpty()) info.append(QPair<QString,QString>("Serial Number", hi.serialNumber()));
+    if (!hi.imei().isEmpty()) info.append(QPair<QString,QString>("IMEI", hi.imei()));
+    if (!hi.meid().isEmpty()) info.append(QPair<QString,QString>("MEID", hi.meid()));
+    if (!hi.hardwareId().isEmpty()) info.append(QPair<QString,QString>("Hardware ID", hi.hardwareId()));
+    if (!hi.deviceName().isEmpty()) info.append(QPair<QString,QString>("Device Name", hi.deviceName()));
+    if (!hi.property("modelName").toString().isEmpty()) info.append(QPair<QString,QString>("Model Name", hi.property("modelName").toString()));
+    if (!hi.property("modelNumber").toString().isEmpty()) info.append(QPair<QString,QString>("Model Number", hi.property("modelNumber").toString()));
+//    info.append(QPair<QString,QString>("Keyboard", hi.isPhysicalKeyboardDevice() ? "Yes" : "No" ));
+
+    QList<int> dids;
+    dids << bb::device::DisplayInfo::primaryDisplayId() << bb::device::DisplayInfo::secondaryDisplayId();
+    foreach (int displayId, dids ) {
+        bb::device::DisplayInfo *di = new bb::device::DisplayInfo(displayId,0);
+        if (di->isValid())
+            info.append(QPair<QString,QString>(QString("Screen (%0)").arg(di->displayName()), QString("%0x%1, %2").arg(di->pixelSize().width()).arg(di->pixelSize().height()).arg(di->isDetachable() ? (di->isAttached() ? "Attached" : "Off") : "")));
     }
-    info.append(QPair<QString,QString>("section", "Mobility"));
 
-    QString mobilityver = si.version((QSystemInfo::Version)4);
-    if (mobilityver.isEmpty() || mobilityver == "Not Available")
-        value = "1.0.x";
-    else
-        value = si.version((QSystemInfo::Version)4);
-    info.append(QPair<QString,QString>("Version", value));
+    bb::device::CellularNetworkInfo cni;
+    bb::device::SimCardInfo sci;
+    info.append(QPair<QString,QString>("SIM country", QString("Home: %0, Current: %1").arg(sci.mobileCountryCode()).arg(cni.mobileCountryCode())));
+    info.append(QPair<QString,QString>("SIM network", QString("Home: %0, Current: %1").arg(sci.mobileNetworkCode()).arg(cni.mobileNetworkCode())));
 
-    QStringList valuelist;
-    QSystemInfo qsi;
-    if (qsi.hasFeatureSupported(QSystemInfo::BluetoothFeature)) valuelist << "Bluetooth";
-    if (qsi.hasFeatureSupported(QSystemInfo::CameraFeature)) valuelist << "Camera";
-    if (qsi.hasFeatureSupported(QSystemInfo::FmradioFeature)) valuelist << "FM Radio";
-    if (qsi.hasFeatureSupported(QSystemInfo::IrFeature)) valuelist << "Infrared";
-    if (qsi.hasFeatureSupported(QSystemInfo::LedFeature)) valuelist << "LED";
-    if (qsi.hasFeatureSupported(QSystemInfo::MemcardFeature)) valuelist << "Memory card";
-    if (qsi.hasFeatureSupported(QSystemInfo::UsbFeature)) valuelist << "USB";
-    if (qsi.hasFeatureSupported(QSystemInfo::VibFeature)) valuelist << "Vibra";
-    if (qsi.hasFeatureSupported(QSystemInfo::WlanFeature)) valuelist << "WiFi";
-    if (qsi.hasFeatureSupported(QSystemInfo::SimFeature)) valuelist << "SIM";
-    if (qsi.hasFeatureSupported(QSystemInfo::LocationFeature)) valuelist << "GPS";
-    if (qsi.hasFeatureSupported(QSystemInfo::VideoOutFeature)) valuelist << "Video out";
-    if (qsi.hasFeatureSupported(QSystemInfo::HapticsFeature)) valuelist << "Haptics";
-    if (qsi.hasFeatureSupported((QSystemInfo::Feature)13)) valuelist << "FM Transmitter"; // added in 1.2 so no enum
+    bb::device::CellularRadioInfo cri;
+    valuelist.clear();
+    if (cri.technologies() & 0x01) valuelist << "GSM";
+    if (cri.technologies() & 0x02) valuelist << "UMTS";
+    if (cri.technologies() & 0x04) valuelist << "CDMA2000 1xRTT";
+    if (cri.technologies() & 0x08) valuelist << "CDMA2000 1xEV-DO";
+    if (cri.technologies() & 0x10) valuelist << "LTE";
+    info.append(QPair<QString,QString>("Cellular technologies", valuelist.join(", ")));
 
-    info.append(QPair<QString,QString>("Hardware features", valuelist.join(", ")));
 
     valuelist.clear();
-    foreach (QByteArray sensorname, QSensor::sensorTypes()) {
-        valuelist << QString(sensorname);
-    }
-    if (!valuelist.isEmpty())  info.append(QPair<QString,QString>("Sensors", valuelist.join(", ")));
-
-//    QServiceManager qsm;
-//    info.append(QPair<QString,QString>("Services", qsm.findServices().join(", ")));
-
-    // 1.2 API, though exists in undocumented (and segfaulting) form in 1.1, too
-//    foreach (QString drive, QSystemStorageInfo::logicalDrives()) {
-//        QSystemStorageInfo qssi;
-//        info.append(QPair<QString,QString>(QString("Storage (%0)").arg(drive), QString("%0MB (%1 free)").arg(qssi.totalDiskSpace(drive) / (1 << 20) ).arg(qssi.availableDiskSpace(drive) / (1 << 20) )));
-//    }
-
-    QSystemNetworkInfo qsni;
-    if (!qsni.homeMobileCountryCode().isEmpty()) {
-        info.append(QPair<QString,QString>("SIM country", QString("Home: %0, Current: %1").arg(qsni.homeMobileCountryCode()).arg(qsni.currentMobileCountryCode())));
-        info.append(QPair<QString,QString>("SIM network", QString("Home: %0, Current: %1").arg(qsni.homeMobileNetworkCode()).arg(qsni.currentMobileNetworkCode())));
-    }
-
-
+    if (cri.services() & 0x01) valuelist << "Emergency calls";
+    if (cri.services() & 0x02) valuelist << "Voice";
+    if (cri.services() & 0x04) valuelist << "911 callback/locator";
+    if (cri.services() & 0x100) valuelist << "Data transfer";
+    if (cri.services() & 0x400) valuelist << "Simultaneous Voice+Data";
+    if (cri.services() & 0x1000) valuelist << "GPRS data";
+    if (cri.services() & 0x2000) valuelist << "EDGE data";
+    if (cri.services() & 0x4000) valuelist << "UMTS data";
+    if (cri.services() & 0x8000) valuelist << "HSPA data";
+    if (cri.services() & 0x10000) valuelist << "HSPA+ data";
+    if (cri.services() & 0x20000) valuelist << "CDMA 1x data";
+    if (cri.services() & 0x40000) valuelist << "EV-DO release 0 data";
+    if (cri.services() & 0x80000) valuelist << "EV-DO revision A data";
+    if (cri.services() & 0x100000) valuelist << "eHRPD data";
+    if (cri.services() & 0x200000) valuelist << "LTE data";
+    info.append(QPair<QString,QString>("Cellular services", valuelist.join(", ")));
 
     return info;
 }

@@ -8,28 +8,32 @@ SUBDIRS = glinfolib \
           mobilityinfolib \
           multimediainfolib \
           sqlinfolib \
+          qtquickinfolib \
+          declarativeui \
           qtinfo 
 
-qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib sqlinfolib multimediainfolib
+qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib sqlinfolib multimediainfolib qtquickinfolib declarativeui
 
-!contains(QT_VERSION, ^4\\.[0-6]\\..*) {
-    SUBDIRS += qtquickinfolib
-    qtinfo.depends += qtquickinfolib
-    !qnx {
-        SUBDIRS += declarativeui 
-        qtinfo.depends += declarativeui 
-    } else {
-        SUBDIRS += cascadesui bb10infolib
-        qtinfo.depends += cascadesui bb10infolib
-        SUBDIRS += webkitinfolib
-        qtinfo.depends += webkitinfolib
-    }
+# Qt prior to 4.7 has no declarative module
+contains(QT_VERSION, ^4\\.[0-6]\\..*) {
+    SUBDIRS -= qtquickinfolib declarativeui
+    qtinfo.depends -= qtquickinfolib declarativeui
 }
-else  {
+
+# Symbian doesn't do the GL module
 symbian: {
     SUBDIRS -= glinfolib
     qtinfo.depends -= glinfolibs
-    }
+}
+
+# BB10 uses cascades, has no webkit, gl or the sysinfo from mobility libs
+qnx {
+    SUBDIRS += cascadesui bb10infolib
+    qtinfo.depends += cascadesui bb10infolib
+    SUBDIRS -= webkitinfolib
+#glinfolib
+    qtinfo.depends -= webkitinfolib
+#glinfolib
 }
 
 OTHER_FILES += \

@@ -19,3 +19,7 @@ LIBS += -lbbplatform -lbbdevice
 HEADERS += bb10infolib.h
 SOURCES += bb10infolib.cpp
 
+OTHER_FILES += \
+    assets/qtinfo.svg \
+    assets/qtinfo.png
+

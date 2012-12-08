@@ -5,11 +5,15 @@
 #include <QGLFormat>
 #endif
 
+#include <QApplication>
+
 QList<QPair<QString, QString> > GLInfo()
 {
     QList<QPair<QString, QString> > info;
     info.append(QPair<QString,QString>("section", "OpenGL"));
-
+#ifdef Q_OS_BLACKBERRY
+    QApplication aa();
+#endif
     QString value = "";
 #ifdef QT_OPENGL_LIB
     if (QGLFormat::hasOpenGL()) {

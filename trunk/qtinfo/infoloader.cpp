@@ -48,17 +48,20 @@ void InfoLoader::run()
 
     addToTemplate(key, value);
 
+    qDebug() << "A";
     emit newInfoAvailable("Checking build date...");
     key = "Qt build";
     value = QLibraryInfo::buildDate().toString()+ ", " + QLibraryInfo::buildKey()  + ", " + QLibraryInfo::licensee();
     addToTemplate(key, value);
 
+    qDebug() << "B";
     emit newInfoAvailable("Checking country/language...");
     key = "Country";
     QLocale defaultlocale;
     value = QLocale::countryToString(defaultlocale.country());
     addToTemplate(key, value);
 
+    qDebug() << "C";
     key = "Language";
     value = QLocale::languageToString(defaultlocale.language()) + " (" + defaultlocale.name() + ")";
     addToTemplate(key, value);
@@ -144,6 +147,11 @@ void InfoLoader::run()
 
 //    loadInfo("Section Name", "Qt module name needed to load", "our local lib name", "our local extern C function name");
 
+#ifdef Q_OS_BLACKBERRY
+    emit newInfoAvailable("Loading bb10info...");
+    loadInfo("BB10", "QtCore", "bb10infolib", "bb10Info");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
+#endif
 
     emit newInfoAvailable("Loading systeminfo...");
     loadInfo("Mobility", "QtSystemInfo", QString("mobilityinfolib%0").arg(libsuffix), "mobilityInfo");
@@ -195,7 +203,9 @@ void InfoLoader::run()
     }
     addToTemplate(key, valuelist.join(", "));
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
+    qApp->processEvents();
 
+#ifndef Q_OS_BLACKBERRY
     emit newInfoAvailable("Determining system fonts...");
     QList<QPair<QString, QString> > list;
     list.append(QPair<QString,QString>("section", "Fonts"));
@@ -213,6 +223,7 @@ void InfoLoader::run()
     }
     list.append(QPair<QString,QString>("Standard sizes", valuelist.join(", ")));
     addToTemplate(list);
+#endif
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
 
@@ -238,9 +249,13 @@ void InfoLoader::addToTemplate(QString key, QString value)
     html = html.replace("__ROWTEMPLATE__", rowstr.arg(key).arg(value).arg("__ROWTEMPLATE__"));
     rawpairs.append(qMakePair(key, value));
 
+#ifndef Q_OS_BLACKBERRY
     QTextBrowser tb;
     tb.setHtml(value);
     out << key << ": " << tb.toPlainText() << endl;
+#else
+    out << key << ": " << value << endl;
+#endif
 }
 
 void InfoLoader::addToTemplate(QList<QPair<QString, QString> > list)
@@ -313,7 +328,11 @@ void InfoLoader::loadInfo(QString key, QString libname, QString libfile, const c
 {
     if (installedlibs.contains(libname))
     {
+#ifdef Q_OS_BLACKBERRY
+        QString libname(loadLib("app/native/lib"+libfile+".so")); // hmm... might need to include ./ as one of the possible prefixes ?
+#else
         QString libname(loadLib(qApp->applicationDirPath()+"/"+libfile)); // hmm... might need to include ./ as one of the possible prefixes ?
+#endif
 
         if (!libname.isEmpty())
         {
@@ -324,6 +343,10 @@ void InfoLoader::loadInfo(QString key, QString libname, QString libfile, const c
 
 int InfoLoader::divineMobilityVersion()
 {
+#ifdef Q_OS_BLACKBERRY
+    // BB is unable to tell which version it has :/
+    return 0x010200;
+#endif
     if (installedlibs.contains("QtConnectivity"))
         return 0x010200;
     if (installedlibs.contains("QtGallery"))

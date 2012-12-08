@@ -10,24 +10,25 @@ QT       += core gui
 TARGET = qtinfo
 TEMPLATE = app
 
-SOURCES += main.cpp
-
-qnx {
-# Cant switch UIs on BB10 so have to start with cascades upfront
-    SOURCES -= main.cpp
-    SOURCES += maincascades.cpp
-    CONFIG += cascades
-    LIBS   += -lbbdata
-
-}
-
-SOURCES += mainwindow.cpp \
+SOURCES += main.cpp  \
+    mainwindow.cpp \
     infoloader.cpp
 
 HEADERS  += mainwindow.h \
     infoloader.h
 
 FORMS    += mainwindow.ui
+
+qnx {
+# Cant switch UIs on BB10 so have to start with cascades upfront
+    SOURCES -= main.cpp mainwindow.cpp
+    HEADERS -= mainwindow.h
+    SOURCES += maincascades.cpp maincascadeswindow.cpp
+    HEADERS += maincascadeswindow.hpp
+    CONFIG += cascades
+    LIBS   += -lbbdata
+
+}
 
 symbian {
     TARGET.EPOCSTACKSIZE = 0x14000
@@ -74,4 +75,17 @@ unix:!symbian { # not funny
     INSTALLS += desktopfile icon target
 }
 
+qnx {
+    !contains($${PWD}, $${OUT_PWD}) { # copy files in case of shadow building (packaging duh)
+        unix: COPY = cp -r
+        win32: COPY = copy /y
+        QMAKE_POST_LINK +=    $$COPY $${PWD}/bb10icon.png $${OUT_PWD}/icon.png
+        QMAKE_POST_LINK += && $$COPY $${PWD}/../cascadesui/assets $${OUT_PWD}/../cascadesui
+    }
+}
+
 include(../qtinfo_symbianplatsec.pri)
+
+OTHER_FILES += \
+    bb10icon.png \
+    bar-descriptor.xml

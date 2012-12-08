@@ -39,7 +39,7 @@
 
     <!-- Fourth digit segment of the package version. First three segments are taken from the 
          <versionNumber> element.  Must be an integer from 0 to 2^16-1 -->
-    <buildId>1</buildId>
+    <buildId>2</buildId>
                  
     <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
     <!-- <versionLabel></versionLabel> -->
@@ -52,13 +52,14 @@
     <!-- <copyright></copyright> -->
 
     <!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
-    <author>Example Inc.</author>
+    <author>Attila Csipa</author>
     
     <!--  Unique author ID assigned by signing authority. Required if using debug tokens. -->
-    <!-- <authorId>ABC1234YjsnUk235h</authorId> -->
+    <authorId>gYAAgGWYboWBFXlBEdKjSSRb1fw</authorId>
    
     <initialWindow>
         <systemChrome>none</systemChrome>
+        <autoOrients>true</autoOrients>
         <transparent>false</transparent>
     </initialWindow>
     
@@ -66,36 +67,80 @@
     <category>core.games</category>
     <configuration id="com.qnx.qcc.toolChain.355029720" name="Default">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm/o.le-v7-g/QtInfo" entry="true" type="Qnx/Elf">QtInfo</asset>
+       <asset path="qtinfo/qtinfo" entry="true" type="Qnx/Elf">qtinfo</asset>
+       <asset path="qtquickinfolib/libqtquickinfolib.so" entry="true" type="Qnx/Elf">libqtquickinfolib.so</asset>
+       <asset path="cascadesui/libcascadesui.so" entry="true" type="Qnx/Elf">libcascadesui.so</asset>
+       <asset path="bb10infolib/libbb10infolib.so" entry="true" type="Qnx/Elf">libbb10infolib.so</asset>
+<!--       <asset path="glinfolib/libglinfolib.so" entry="true" type="Qnx/Elf">libglinfolib.so</asset>  -->
+       <asset path="mobilityinfolib/libmobilityinfolib12.so" entry="true" type="Qnx/Elf">libmobilityinfolib12.so</asset>
+       <asset path="multimediainfolib/libmultimediainfolib12.so" entry="true" type="Qnx/Elf">libmultimediainfolib12.so</asset>
+       <asset path="sqlinfolib/libsqlinfolib.so" entry="true" type="Qnx/Elf">libsqlinfolib.so</asset>
+       <asset path="../trunk/qtinfo/bb10icon.png">icon.png</asset>
+       <asset path="../trunk/cascadesui/assets">assets</asset>
     </configuration>
     <configuration id="com.qnx.qcc.toolChain.1891073914" name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm/o.le-v7-g/QtInfo" entry="true" type="Qnx/Elf">QtInfo</asset>
+       <asset path="qtinfo/qtinfo" entry="true" type="Qnx/Elf">qtinfo</asset>
+       <asset path="qtquickinfolib/libqtquickinfolib.so" entry="true" type="Qnx/Elf">libqtquickinfolib.so</asset>
+       <asset path="cascadesui/libcascadesui.so" entry="true" type="Qnx/Elf">libcascadesui.so</asset>
+       <asset path="bb10infolib/libbb10infolib.so" entry="true" type="Qnx/Elf">libbb10infolib.so</asset>
+<!--       <asset path="glinfolib/libglinfolib.so" entry="true" type="Qnx/Elf">libglinfolib.so</asset>  -->
+       <asset path="mobilityinfolib/libmobilityinfolib12.so" entry="true" type="Qnx/Elf">libmobilityinfolib12.so</asset>
+       <asset path="multimediainfolib/libmultimediainfolib12.so" entry="true" type="Qnx/Elf">libmultimediainfolib12.so</asset>
+       <asset path="sqlinfolib/libsqlinfolib.so" entry="true" type="Qnx/Elf">libsqlinfolib.so</asset>
+       <asset path="../../trunk/qtinfo/bb10icon.png">icon.png</asset>
+       <asset path="../../trunk/cascadesui/assets">assets</asset>
     </configuration>
     <configuration id="com.qnx.qcc.toolChain.956081273" name="Device-Release">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="arm/o.le-v7/QtInfo" entry="true" type="Qnx/Elf">QtInfo</asset>
+       <asset path="${QNX_TARGET}/qtinfo/qtinfo" entry="true" type="Qnx/Elf">qtinfo</asset>
+       <asset path="${QNX_TARGET}/qtquickinfolib/libqtquickinfolib.so" entry="true" type="Qnx/Elf">libqtquickinfolib.so</asset>
+       <asset path="${QNX_TARGET}/cascadesui/libcascadesui.so" entry="true" type="Qnx/Elf">libcascadesui.so</asset>
+       <asset path="${QNX_TARGET}/bb10infolib/libbb10infolib.so" entry="true" type="Qnx/Elf">libbb10infolib.so</asset>
+<!--       <asset path="${QNX_TARGET}/glinfolib/libglinfolib.so" entry="true" type="Qnx/Elf">libglinfolib.so</asset>  -->
+       <asset path="${QNX_TARGET}/mobilityinfolib/libmobilityinfolib12.so" entry="true" type="Qnx/Elf">libmobilityinfolib12.so</asset>
+       <asset path="${QNX_TARGET}/multimediainfolib/libmultimediainfolib12.so" entry="true" type="Qnx/Elf">libmultimediainfolib12.so</asset>
+       <asset path="${QNX_TARGET}/sqlinfolib/libsqlinfolib.so" entry="true" type="Qnx/Elf">libsqlinfolib.so</asset>
+       <asset path="bb10icon.png">icon.png</asset>
+       <asset path="../cascadesui/assets">assets</asset>
     </configuration>
     <configuration id="com.qnx.qcc.toolChain.238702501" name="Simulator-Debug">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="x86/o-g/QtInfo" entry="true" type="Qnx/Elf">QtInfo</asset>
+       <asset path="qtinfo/qtinfo" entry="true" type="Qnx/Elf">qtinfo</asset>
+       <asset path="qtquickinfolib/libqtquickinfolib.so" entry="true" type="Qnx/Elf">libqtquickinfolib.so</asset>
+       <asset path="cascadesui/libcascadesui.so" entry="true" type="Qnx/Elf">libcascadesui.so</asset>
+       <asset path="bb10infolib/libbb10infolib.so" entry="true" type="Qnx/Elf">libbb10infolib.so</asset>
+<!--       <asset path="glinfolib/libglinfolib.so" entry="true" type="Qnx/Elf">libglinfolib.so</asset>  -->
+       <asset path="mobilityinfolib/libmobilityinfolib12.so" entry="true" type="Qnx/Elf">libmobilityinfolib12.so</asset>
+       <asset path="multimediainfolib/libmultimediainfolib12.so" entry="true" type="Qnx/Elf">libmultimediainfolib12.so</asset>
+       <asset path="sqlinfolib/libsqlinfolib.so" entry="true" type="Qnx/Elf">libsqlinfolib.so</asset>
+       <asset path="../../trunk/qtinfo/bb10icon.png">icon.png</asset>
+       <asset path="../../trunk/cascadesui/assets">assets</asset>
     </configuration>
-    
+
     <!--  The icon for the application, which should be 86x86. -->
     <icon>
-        <image>bb10icon.png</image>
+        <image>icon.png</image>
     </icon>
 
-    <asset path="bb10icon.png">bb10icon.png</asset>
-    <asset path="assets">assets</asset>
     
-    <!-- Locale support -->
-    <asset path="translations" dest="qm">
+    <!-- Locale support    <asset path="translations" dest="qm">
         <include name="*.qm"/>
-    </asset>
+    </asset> -->
+
     
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>
+    <permission>read_device_identifying_information</permission>
+    <permission>use_camera</permission>
+    <permission>access_internet</permission>
+    <permission>access_location_services</permission>
+    <permission>read_geolocation</permission>
+
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
+
+<!--    <asset path="%QT_INSTALL_LIBS%">lib</asset>
+    <asset path="%QT_INSTALL_PLUGINS%">plugins</asset>
+    <asset path="%QT_INSTALL_IMPORTS%">imports</asset> -->
 
 </qnx>
