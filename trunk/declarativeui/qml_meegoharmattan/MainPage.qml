@@ -14,11 +14,11 @@ Page {
 
     tools: ToolBarLayout {
             id: toolBarLayout
-            ToolButton {
-                flat: true
-                iconSource: "toolbar-back"
-                onClicked: Qt.quit()
-            }
+//            ToolButton {
+//                flat: true
+//                iconSource: "toolbar-back"
+//                onClicked: Qt.quit()
+//            }
             ToolButton {
                 text: "Share"
                 onClicked: shareDialog.open()
@@ -27,11 +27,11 @@ Page {
                 text: "Copy"
                 onClicked: copyDialog.open()
             }
-            ToolButton {
-                flat: true
-                iconSource: "toolbar-menu"
-                onClicked: menu.open()
-            }
+//            ToolButton {
+//                flat: true
+//                iconSource: "toolbar-menu"
+//                onClicked: menu.open()
+//            }
     }
 
     SelectionDialog {

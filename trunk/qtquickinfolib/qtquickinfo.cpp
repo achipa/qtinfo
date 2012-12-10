@@ -68,7 +68,7 @@ void searchPlugin(QString path, QString plugin, QStringList& pluginList, QString
 
         if (plugin == "Qt.labs.components" || plugin == "Qt.labs.components.native" ||
             plugin == "com.nokia.symbian" || plugin == "com.nokia.meego" ||
-            plugin == "com.nokia.extras")
+            plugin == "com.nokia.extras" || plugin == "bb.cascades")
         {
             qtComponentsList.append("<b>"+plugin+"</b>");
             QString qmldir = path+"/qmldir";
@@ -124,7 +124,7 @@ QList<QPair<QString, QString> > qtQuickInfo()
         components += component + "<br>";
     }
 
-    info.append(QPair<QString,QString>("Qt Components", components));
+    if (!components.isEmpty()) info.append(QPair<QString,QString>("Qt Components", components));
 
     QDeclarativeEngine engine;
     QStringList importPaths = engine.importPathList();

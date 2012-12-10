@@ -26,8 +26,14 @@ isEmpty(MOBILITY_VERSION) {
     MOBILITY_PATCH_VERSION=2
 }
 
-MOBILITY += sensors # serviceframework
-contains(MOBILITY_CONFIG,systeminfo): MOBILITY += systeminfo     # because blackberry is special
+contains(MOBILITY_CONFIG,sensors): {
+    MOBILITY += sensors
+    DEFINES += QTM_SENSORS
+}
+contains(MOBILITY_CONFIG,systeminfo): {
+    MOBILITY += systeminfo
+    DEFINES += QTM_SYSTEMINFO
+}
 
 TARGET = mobilityinfolib$$MOBILITY_MAJOR_VERSION$$MOBILITY_MINOR_VERSION
 

@@ -1,20 +1,25 @@
 #include "mobilityinfo.h"
-
-
-
 #include <QStringList>
+
 #ifndef Q_OS_BLACKBERRY
 #include <qmobilityglobal.h>
+#else
+#include <QtMobility/qmobilityglobal.h>
+#endif
+
+#ifdef QTM_SYSTEMINFO
 #include <QSystemInfo>
 #include <QSystemDisplayInfo>
 #include <QSystemStorageInfo>
 #include <QSystemNetworkInfo>
 #include <QSystemDeviceInfo>
 #include <QDesktopWidget>
-#else
-#include <QtMobility/qmobilityglobal.h>
 #endif
+
+#ifdef QTM_SENSORS
 #include <QSensor>
+#endif
+
 // #include <QtServiceFramework/QServiceManager>
 
 QTM_USE_NAMESPACE
@@ -25,27 +30,13 @@ QList<QPair<QString, QString> > mobilityInfo()
     QString value;
     QStringList valuelist;
 
-#ifdef Q_OS_BLACKBERRY
     info.append(QPair<QString,QString>("section", "Mobility"));
-
-    info.append(QPair<QString,QString>("Version", QTM_VERSION_STR ));
-
-
-    foreach (QByteArray sensorname, QSensor::sensorTypes()) {
-        valuelist << QString(sensorname);
-    }
-    if (!valuelist.isEmpty())  info.append(QPair<QString,QString>("Sensors", valuelist.join(", ")));
-    valuelist.clear();
-
-    valuelist << "Provided via platform specific BB classes, not the Mobility APIs";
-    info.append(QPair<QString,QString>("Hardware features", valuelist.join(", ")));
-
-#else
 
 //    hmm, segfaults on my desktop 1.2
 //    QSystemDeviceInfo qsdei;
 //    info.append(QPair<QString,QString>("Device", QString("%0 %1 (%2)").arg(qsdei.manufacturer()).arg(qsdei.model()).arg(qsdei.productName())));
 
+#ifdef QTM_SYSTEMINFO
     QSystemInfo si;
     value = si.version(QSystemInfo::Os) + " / "  + si.version(QSystemInfo::Firmware);
     info.append(QPair<QString,QString>("OS / Firmware", value));
@@ -58,7 +49,7 @@ QList<QPair<QString, QString> > mobilityInfo()
 //        info.append(QPair<QString,QString>(QString("Screen (%0)").arg(i), QString("%0x%1, %2 DPI, %3b").arg(sg.width()).arg(sg.height()).arg(qsdi.getDPIWidth(i)).arg(qsdi.colorDepth(i))));
         info.append(QPair<QString,QString>(QString("Screen (%0)").arg(i), QString("%0x%1, %2b").arg(sg.width()).arg(sg.height()).arg(qsdi.colorDepth(i))));
     }
-    info.append(QPair<QString,QString>("section", "Mobility"));
+//    info.append(QPair<QString,QString>("section", "Mobility"));
 
     QString mobilityver = si.version((QSystemInfo::Version)4);
     if (mobilityver.isEmpty() || mobilityver == "Not Available")
@@ -83,14 +74,6 @@ QList<QPair<QString, QString> > mobilityInfo()
     if (qsi.hasFeatureSupported(QSystemInfo::HapticsFeature)) valuelist << "Haptics";
     if (qsi.hasFeatureSupported((QSystemInfo::Feature)13)) valuelist << "FM Transmitter"; // added in 1.2 so no enum
 
-    info.append(QPair<QString,QString>("Hardware features", valuelist.join(", ")));
-
-    valuelist.clear();
-    foreach (QByteArray sensorname, QSensor::sensorTypes()) {
-        valuelist << QString(sensorname);
-    }
-    if (!valuelist.isEmpty())  info.append(QPair<QString,QString>("Sensors", valuelist.join(", ")));
-
 //    QServiceManager qsm;
 //    info.append(QPair<QString,QString>("Services", qsm.findServices().join(", ")));
 
@@ -106,7 +89,18 @@ QList<QPair<QString, QString> > mobilityInfo()
         info.append(QPair<QString,QString>("SIM network", QString("Home: %0, Current: %1").arg(qsni.homeMobileNetworkCode()).arg(qsni.currentMobileNetworkCode())));
     }
 
+#else // No one in their right mind would link us against the wrong version, right?
+    info.append(QPair<QString,QString>("Version", QString("Compiled with ") + QTM_VERSION_STR ));
+#endif
 
+#ifdef QTM_SENSORS
+    info.append(QPair<QString,QString>("Hardware features", valuelist.join(", ")));
+
+    valuelist.clear();
+    foreach (QByteArray sensorname, QSensor::sensorTypes()) {
+        valuelist << QString(sensorname);
+    }
+    if (!valuelist.isEmpty())  info.append(QPair<QString,QString>("Sensors", valuelist.join(", ")));
 #endif
 
     return info;
