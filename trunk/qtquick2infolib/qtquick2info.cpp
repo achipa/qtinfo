@@ -1,22 +1,21 @@
-#include "qtquickinfo.h"
-#include <QtDeclarative>
+#include "qtquick2info.h"
+#include <QQuickView>
+#include <QQmlEngine>
 #include <QStringList>
+#include <QDir>
 #include <QDebug>
 
 QString qtQuickVersion()
 {
-#ifdef Q_OS_BLACKBERRY
-    return "Could not determine Qt Quick version";
-#endif
-    QDeclarativeView view;
+    QQuickView view;
     view.setSource(QUrl("qrc:///qml/qtquick20.qml"));
-    if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "2.0";
+    if (view.status() == QQuickView::Ready && view.errors().length() == 0) return "2.0";
     view.setSource(QUrl("qrc:///qml/qtquick11.qml"));
-    if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "1.1";
+    if (view.status() == QQuickView::Ready && view.errors().length() == 0) return "1.1";
     view.setSource(QUrl("qrc:///qml/qtquick10.qml"));
-    if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "1.0";
+    if (view.status() == QQuickView::Ready && view.errors().length() == 0) return "1.0";
     view.setSource(QUrl("qrc:///qml/qt47.qml"));
-    if (view.status() == QDeclarativeView::Ready && view.errors().length() == 0) return "1.0 (import Qt 4.7)";
+    if (view.status() == QQuickView::Ready && view.errors().length() == 0) return "1.0 (import Qt 4.7)";
 
     return "Could not determine Qt Quick version";
 }
@@ -87,7 +86,7 @@ void searchPlugin(QString path, QString plugin, QStringList& pluginList, QString
 // Returns a string with all QML plugins found from the QDeclarativeEngine import path
 QString qtQuickPlugins(QStringList& qtComponents)
 {
-    QDeclarativeEngine engine;
+    QQmlEngine engine;
     QStringList importPaths = engine.importPathList();
     QStringList plugins;
 
@@ -106,10 +105,10 @@ QString qtQuickPlugins(QStringList& qtComponents)
 }
 
 
-QList<QPair<QString, QString> > qtQuickInfo()
+QList<QPair<QString, QString> > qtQuick2Info()
 {
     QList<QPair<QString, QString> > info;
-    info.append(QPair<QString,QString>("section", "Qt Quick (via QtDeclarative)"));
+    info.append(QPair<QString,QString>("section", "Qt Quick (via QtQml/Quick)"));
 
     info.append(QPair<QString,QString>("Qt Quick version", qtQuickVersion()));
 
@@ -126,7 +125,7 @@ QList<QPair<QString, QString> > qtQuickInfo()
 
     if (!components.isEmpty()) info.append(QPair<QString,QString>("Qt Components", components));
 
-    QDeclarativeEngine engine;
+    QQmlEngine engine;
     QStringList importPaths = engine.importPathList();
     QString list;
     foreach(QString path, importPaths)
@@ -142,11 +141,11 @@ QList<QPair<QString, QString> > qtQuickInfo()
 
 
 #ifdef _MSC_VER
-QString qtQuickInfoQString()
+QString qtQuick2InfoQString()
 {
     QStringList qsl;
     typedef QPair<QString, QString> StringPair;
-    QList<StringPair> info = qtQuickInfo();
+    QList<StringPair> info = qtQuick2Info();
     foreach (StringPair pair, info)
     {
        qsl << pair.first + "##PAIRSEPARATOR##" + pair.second;
@@ -154,7 +153,4 @@ QString qtQuickInfoQString()
     return qsl.join("##LINESEPARATOR##");
 }
 #endif
-
-
-
 

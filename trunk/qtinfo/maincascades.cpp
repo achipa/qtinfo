@@ -2,37 +2,39 @@
 #include "maincascadeswindow.hpp"
 #include <QLocale>
 #include <QTranslator>
+#include <QStringList>
+#include <QDebug>
 
 #include <bb/cascades/QmlDocument>
 #include <bb/cascades/AbstractPane>
 
 using namespace bb::cascades;
 
-void myMessageOutput(QtMsgType type, const char *msg)
-{
-    //in this function, you can write the message to any stream!
-    switch (type) {
-    case QtDebugMsg:
-        fprintf(stderr, "Debug: %s\n", msg);
-        break;
-    case QtWarningMsg:
-        fprintf(stderr, "Warning: %s\n", msg);
-        break;
-    case QtCriticalMsg:
-        fprintf(stderr, "Critical: %s\n", msg);
-        break;
-    case QtFatalMsg:
-        fprintf(stderr, "Fatal: %s\n", msg);
-        std::abort();
-    }
-}
-
 int main(int argc, char **argv)
 {
-//    qInstallMsgHandler(myMessageOutput);
-
+/*
+    QApplication* tmpapp = new QApplication(argc, argv);
+    tmpapp->processEvents();
+    QFontDatabase database;
+    QString familiesList = database.families().join(", ");
+    QStringList valuelist;
+    foreach(QFontDatabase::WritingSystem ws, database.writingSystems()) {
+        valuelist << QString("%0 (%1)").arg(QFontDatabase::writingSystemName(ws)).arg(QFontDatabase::writingSystemSample(ws));
+    }
+    QString writingsystemList = valuelist.join(", ");
+    valuelist.clear();
+    foreach(int size, database.standardSizes()) {
+        valuelist << QString("%0").arg(size);
+    }
+    QString standardsizesList = valuelist.join(", ");
+    qDebug() << familiesList << writingsystemList << standardsizesList;
+    tmpapp->processEvents();
+    delete tmpapp; // stuff you don't see normally. BB10 is special.
+*/
     // this is where the server is started etc
     Application app(argc, argv);
+//    app.setProperty("families", QString("TehFontList"));
+//    app.setProperty("families", familiesList);
 
     // localization support
     QTranslator translator;

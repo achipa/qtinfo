@@ -10,6 +10,10 @@
 #include <QTextBrowser>
 #include <QApplication>
 
+#ifdef Q_OS_BLACKBERRY
+#include <bb/cascades/Application>
+#endif
+
 #define ROWTEMPLATE "\n\
             <tr>\n\
               <td class=\"info\" width=\"100\"><strong>%0</strong></td>\n\
@@ -48,20 +52,21 @@ void InfoLoader::run()
 
     addToTemplate(key, value);
 
-    qDebug() << "A";
     emit newInfoAvailable("Checking build date...");
     key = "Qt build";
-    value = QLibraryInfo::buildDate().toString()+ ", " + QLibraryInfo::buildKey()  + ", " + QLibraryInfo::licensee();
+    value = QLibraryInfo::buildDate().toString()+ ", ";
+#if QT_VERSION < 0x050000
+    value += QLibraryInfo::buildKey() + ", ";
+#endif
+    value += QLibraryInfo::licensee();
     addToTemplate(key, value);
 
-    qDebug() << "B";
     emit newInfoAvailable("Checking country/language...");
     key = "Country";
     QLocale defaultlocale;
     value = QLocale::countryToString(defaultlocale.country());
     addToTemplate(key, value);
 
-    qDebug() << "C";
     key = "Language";
     value = QLocale::languageToString(defaultlocale.language()) + " (" + defaultlocale.name() + ")";
     addToTemplate(key, value);
@@ -98,6 +103,37 @@ void InfoLoader::run()
     qtlibs << "QtWebKit";
     qtlibs << "QtXmlPatterns";
     qtlibs << "QtXml";
+
+    qtlibs << "Qt5CLucene";
+    qtlibs << "Qt5Concurrent";
+    qtlibs << "Qt5Core";
+    qtlibs << "Qt5Declarative";
+    qtlibs << "Qt5Designer";
+    qtlibs << "Qt5DesignerComponents";
+    qtlibs << "Qt5Gui";
+    qtlibs << "Qt5Help";
+    qtlibs << "Qt5Multimedia";
+    qtlibs << "Qt5MultimediaQuick_p";
+    qtlibs << "Qt5MultimediaWidgets";
+    qtlibs << "Qt5Network";
+    qtlibs << "Qt5OpenGL";
+    qtlibs << "Qt5PrintSupport";
+    qtlibs << "Qt5Qml";
+    qtlibs << "Qt5Quick";
+    qtlibs << "Qt5QuickParticles";
+    qtlibs << "Qt5QuickTest";
+    qtlibs << "Qt5Script";
+    qtlibs << "Qt5ScriptTools";
+    qtlibs << "Qt5Sql";
+    qtlibs << "Qt5Svg";
+    qtlibs << "Qt5Test";
+    qtlibs << "Qt5V8";
+    qtlibs << "Qt5WebKit";
+    qtlibs << "Qt5WebKitWidgets";
+    qtlibs << "Qt5Widgets";
+    qtlibs << "Qt5Xml";
+    qtlibs << "Qt5XmlPatterns";
+
 
     qtmobilitylibs << "QtBearer";          // 1.0.x ONLY
     qtmobilitylibs << "QtConnectivity";    // 1.2
@@ -161,20 +197,32 @@ void InfoLoader::run()
     loadInfo("MultimediaKit", "QtMultimediaKit", QString("multimediainfolib%0").arg(libsuffix), "multimediaInfo");
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
+    emit newInfoAvailable("Loading Multimedia...");
+    loadInfo("Multimedia", "Qt5Multimedia", "multimediainfolib", "multimediaInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
+
     emit newInfoAvailable("Loading declarative...");
     loadInfo("Qt Quick", "QtDeclarative", "qtquickinfolib", "qtQuickInfo");
+    loadInfo("Qt Quick", "Qt5Declarative", "qtquickinfolib", "qtQuickInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
+
+    emit newInfoAvailable("Loading qml...");
+    loadInfo("Qt Quick2", "Qt5Qml", "qtquick2infolib", "qtQuick2Info");
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading OpenGL...");
     loadInfo("OpenGL", "QtOpenGL", "glinfolib", "GLInfo");
+    loadInfo("OpenGL", "Qt5OpenGL", "glinfolib", "GLInfo");
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading webkit...");
     loadInfo("WebKit", "QtWebKit", "webkitinfolib", "webkitInfo");
+    loadInfo("WebKit", "Qt5WebKit", "webkitinfolib", "webkitInfo");
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading sql...");
     loadInfo("SQL", "QtSql", "sqlinfolib", "sqlInfo");
+    loadInfo("SQL", "Qt5Sql", "sqlinfolib", "sqlInfo");
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Determining default paths...");
@@ -205,10 +253,15 @@ void InfoLoader::run()
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
     qApp->processEvents();
 
-#ifndef Q_OS_BLACKBERRY
     emit newInfoAvailable("Determining system fonts...");
     QList<QPair<QString, QString> > list;
     list.append(QPair<QString,QString>("section", "Fonts"));
+#ifdef Q_OS_BLACKBERRY
+    list.append(QPair<QString,QString>("Installed fonts", "N/A (Cascades incompatible with QFontDatabase)"));
+    list.append(QPair<QString,QString>("Writing systems", "N/A (Cascades incompatible with QFontDatabase)"));
+    list.append(QPair<QString,QString>("Standard sizes", "N/A (Cascades incompatible with QFontDatabase)"));
+    // and all this shouldn't be hardcoded except BB10 Qt SIGSEGVs if we create a QFontDatabase object
+#else
     QFontDatabase database;
     list.append(QPair<QString,QString>("Installed fonts", database.families().join(", ")));
     // database.pointSizes(family) // One day...
@@ -222,8 +275,8 @@ void InfoLoader::run()
         valuelist << QString("%0").arg(size);
     }
     list.append(QPair<QString,QString>("Standard sizes", valuelist.join(", ")));
-    addToTemplate(list);
 #endif
+    addToTemplate(list);
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
 
@@ -232,14 +285,38 @@ bool InfoLoader::loadValues(QString library, QString defaultKey, const char* fun
 {
     QString key = defaultKey;
     typedef QList<QPair<QString, QString> > (*fn)();
-    fn v = (fn) QLibrary::resolve(library, function);
+    QLibrary lib(library);
+    fn v = (fn) lib.resolve(function);
+//    fn v = (fn) QLibrary::resolve(library, function);
     qDebug() << library <<  v;
+    QList<QPair<QString, QString> > list;
     if (v) {
-        QList<QPair<QString, QString> > list = v();
+        list = v();
         addToTemplate(list);
-    } else {
-        addToTemplate(key, "Not Available");
-        return false;
+
+
+    } else { // one more try for the overly pedantic MSVC
+        qDebug() << lib.errorString() << endl;
+        typedef QString (*fnstr)();
+        fnstr strfunc = (fnstr) lib.resolve(QString(QString(function)+"QString").toUtf8());
+        if (strfunc) {
+            QString str = strfunc();
+            QStringList lines = str.split("##LINESEPARATOR##");
+            foreach (QString line, lines) {
+                QStringList pairstring = line.split("##PAIRSEPARATOR##");
+                if (pairstring.size() < 2) continue;
+                QPair<QString, QString> pair(pairstring[0], pairstring[1]);
+                list.append(pair);
+            }
+            addToTemplate(list);
+
+
+
+        } else {
+            qDebug() << lib.errorString() << endl;
+            addToTemplate(key, "Not Available");
+            return false;
+        }
     }
     return true;
 }

@@ -1,14 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
-#include <QtGui/QClipboard>
-#include <QtGui/QDesktopServices>
-#include <QtCore/QUrl>
-#include <QtCore/QFile>
-#include <QtGui/QApplication>
+#include <QMainWindow>
+#include <QClipboard>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QFile>
+#include <QApplication>
 #include <QTextStream>
-#include <QtGui/QFileDialog>
+#include <QFileDialog>
 #include <QDebug>
 #include "infoloader.h"
 
@@ -33,7 +33,7 @@ public slots:
 #ifdef Q_WS_MAEMO_5
 //    void on_mailButton_clicked(bool checked) { QDBusInterface browser("com.nokia.modest", "/com/nokia/modest", "com.nokia.modest")  ; browser.call("MailTo", "");}
 #endif
-    void on_saveButton_clicked(bool checked) { QFile outfile(QFileDialog::getSaveFileName(this, "Save output as", "/home/user/MyDocs/qtinfo.html")); outfile.open(QIODevice::WriteOnly); outfile.write(infoloader->resultAsHTML().toAscii()); outfile.close();  }
+    void on_saveButton_clicked(bool checked) { QFile outfile(QFileDialog::getSaveFileName(this, "Save output as", "/home/user/MyDocs/qtinfo.html")); outfile.open(QIODevice::WriteOnly); outfile.write(infoloader->resultAsHTML().toUtf8()); outfile.close();  }
     void on_jsbinButton_clicked(bool checked) { QDesktopServices::openUrl(QUrl("http://pastebin.com")); }
     void on_clipboardButton_clicked(bool checked) { QClipboard *clipboard = QApplication::clipboard(); clipboard->setText(infoloader->resultAsText()); }
     void showUI();
