@@ -1,5 +1,5 @@
-#ifndef GLINFO_H
-#define GLINFO_H
+#ifndef QTQUICK2INFO_H
+#define QTQUICK2INFO_H
 
 #include <QList>
 #include <QPair>
@@ -11,11 +11,11 @@
 #define MY_EXPORT
 #endif
 
-extern "C" MY_EXPORT QString GLInfoQString();
+extern "C" MY_EXPORT QString qtQuick2InfoQString();
 #ifndef _MSC_VER
 extern "C" {
-QList<QPair<QString, QString> > GLInfo();
+QList<QPair<QString, QString> > qtQuick2Info();
 }
 #endif
 
-#endif GLINFO_H
+#endif // QTQUICK2INFO_H

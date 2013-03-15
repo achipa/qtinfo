@@ -1,11 +1,13 @@
 #include "multimediainfo.h"
+#ifdef QTM_VERSION
 #include <qmobilityglobal.h>
+#endif
 #include <QStringList>
-#include <qaudio.h>
-#include <qaudiodeviceinfo.h>
-#include <QAudioCaptureSource>
-#if QTM_VERSION >= 0x010100
-#include <qcamera.h>
+#include <QAudio>
+#include <QAudiodeviceInfo>
+//#include <QAudioCaptureSource>
+#if (QTM_VERSION >= 0x010100) || (QT_VERSION >= 0x050000)
+#include <QCamera>
 #endif
 #include <qmediarecorder.h>
 #include <QDebug>
@@ -37,7 +39,7 @@ QList<QPair<QString, QString> > multimediaInfo()
         info.append(QPair<QString,QString>("Output devices", devices.join(",")));
     }
 
-#if QTM_VERSION >= 0x010100
+#if (QTM_VERSION >= 0x010100) || (QT_VERSION >= 0x050000)
 
     // "real" audio codecs are actually visible under the QMediaRecorder, so we'll check that under the video section
 
@@ -48,6 +50,7 @@ QList<QPair<QString, QString> > multimediaInfo()
 //        info.append(QPair<QString,QString>("Default input codecs", audioSource->defaultAudioInput()));
 
     if (!QCamera::availableDevices().isEmpty()) {
+        info.append(QPair<QString,QString>("Supported codecs", audiomediarec.supportedAudioCodecs().join(",").replace("audio/","")));
         QCamera audiocam(QCamera::availableDevices().at(0));
         QMediaRecorder audiomediarec(&audiocam);
 
@@ -102,3 +105,18 @@ QList<QPair<QString, QString> > multimediaInfo()
 
     return info;
 }
+
+
+#ifdef _MSC_VER
+QString multimediaInfoQString()
+{
+    QStringList qsl;
+    typedef QPair<QString, QString> StringPair;
+    QList<StringPair> info = multimediaInfo();
+    foreach (StringPair pair, info)
+    {
+       qsl << pair.first + "##PAIRSEPARATOR##" + pair.second;
+    }
+    return qsl.join("##LINESEPARATOR##");
+}
+#endif

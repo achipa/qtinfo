@@ -37,8 +37,7 @@ OTHER_FILES += \
     assets/JSONListModel.qml \
     assets/jsonpath.js
 
-RESOURCES += \
-    qtquickqmls.qrc
+RESOURCES +=
 
 for(deploymentfolder, DEPLOYMENTFOLDERS) {
     item = item$${deploymentfolder}

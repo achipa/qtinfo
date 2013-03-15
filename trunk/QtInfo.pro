@@ -3,11 +3,12 @@ TEMPLATE = subdirs
 CONFIG += ordered
 
 # The actual projects
-SUBDIRS = glinfolib \
+SUBDIRS = \
+          sqlinfolib \
+          glinfolib \
           webkitinfolib \
           mobilityinfolib \
           multimediainfolib \
-          sqlinfolib \
           qtquickinfolib \
           declarativeui \
           qtinfo 
@@ -18,6 +19,13 @@ qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib sqlinfol
 contains(QT_VERSION, ^4\\.[0-6]\\..*) {
     SUBDIRS -= qtquickinfolib declarativeui
     qtinfo.depends -= qtquickinfolib declarativeui
+}
+message($$CONFIG)
+contains(QT_MAJOR_VERSION,5) {
+    SUBDIRS += qtquick2infolib
+    qtinfo.depends += qtquick2infolib
+    SUBDIRS -= mobilityinfolib # multimediainfolib
+    qtinfo.depends -= mobilityinfolib # multimediainfolib
 }
 
 # Symbian doesn't do the GL module

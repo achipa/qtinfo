@@ -11,3 +11,17 @@ QList<QPair<QString, QString> > sqlInfo()
 
     return info;
 }
+
+#ifdef _MSC_VER
+QString sqlInfoQString()
+{
+    QStringList qsl;
+    typedef QPair<QString, QString> StringPair;
+    QList<StringPair> info = sqlInfo();
+    foreach (StringPair pair, info)
+    {
+       qsl << pair.first + "##PAIRSEPARATOR##" + pair.second;
+    }
+    return qsl.join("##LINESEPARATOR##");
+}
+#endif

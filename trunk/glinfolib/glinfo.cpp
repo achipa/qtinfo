@@ -11,11 +11,12 @@ QList<QPair<QString, QString> > GLInfo()
 {
     QList<QPair<QString, QString> > info;
     info.append(QPair<QString,QString>("section", "OpenGL"));
-#ifdef Q_OS_BLACKBERRY
-    QApplication aa();
-#endif
     QString value = "";
 #ifdef QT_OPENGL_LIB
+#ifdef Q_OS_BLACKBERRY
+    info.append(QPair<QString,QString>("OpenGL support", "N/A (Cascades is incompatible with QtOpenGL)"));
+    // ... and this shouldn't be hardcoded, except the BB10 Qt SIGSEGVs if we call hasOpenGL
+#else
     if (QGLFormat::hasOpenGL()) {
         int flags = QGLFormat::openGLVersionFlags ();
         if (flags & QGLFormat::OpenGL_Version_4_0) value += "OpenGL 4.0";
@@ -40,10 +41,24 @@ QList<QPair<QString, QString> > GLInfo()
     }
     info.append(QPair<QString,QString>("OpenGL support", "YES"));
     info.append(QPair<QString,QString>("OpenGL version", value));
-#else
-    info.append(QPair<QString,QString>("OpenGL support", "N/A"));
 #endif
-
+#endif
 
     return info;
 }
+
+
+#ifdef _MSC_VER
+QString GLInfoQString()
+{
+    QStringList qsl;
+    typedef QPair<QString, QString> StringPair;
+    QList<StringPair> info = GLInfo();
+    foreach (StringPair pair, info)
+    {
+       qsl << pair.first + "##PAIRSEPARATOR##" + pair.second;
+    }
+    return qsl.join("##LINESEPARATOR##");
+}
+#endif
+

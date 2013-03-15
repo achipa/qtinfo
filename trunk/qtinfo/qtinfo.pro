@@ -6,6 +6,7 @@
 
 QT       += core gui
 
+contains (QT_MAJOR_VERSION,5): QT += widgets
 
 TARGET = qtinfo
 TEMPLATE = app

@@ -7,27 +7,12 @@ TEMPLATE = lib
 DEPENDPATH += .
 INCLUDEPATH += .
 
-QT += core gui declarative
+QT += qml quick
 
 # Input
-HEADERS += qtquickinfo.h
-SOURCES += qtquickinfo.cpp
+HEADERS += qtquick2info.h
+SOURCES += qtquick2info.cpp
 
-symbian {
-    #Build STDDLL
-    CONFIG += stdbinary
-
-    TARGET = qtquickinfolib
-
-    #Symbian specific definitions
-    MMP_RULES += EXPORTUNFROZEN
-
-    TARGET.EPOCALLOWDLLDATA = 1
-
-    addFiles.sources = $${TARGET}.dll
-    addFiles.path = !:/sys/bin
-    DEPLOYMENT += addFiles
-}
 
 unix:!symbian: {
     target.path = /opt/qtinfo/bin
@@ -41,6 +26,4 @@ OTHER_FILES += \
     qt47.qml
 
 RESOURCES += \
-    qtquickqmls.qrc
-
-include(../qtinfo_symbianplatsec.pri)
+    qtquick2qmls.qrc
