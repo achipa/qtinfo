@@ -45,12 +45,18 @@ exists($$QMAKE_INCDIR_QT"/../qmsystem2/qmkeys.h"):!contains(MEEGO_EDITION,harmat
   DEFINES += MEEGO_EDITION_HARMATTAN
 }
 
+load(sailfishsilicabackground)
+
 unix:!symbian: {
-    !maemo5: {
+    contains(MEEGO_EDITION,harmattan): {
 	    # Add more folders to ship with the application, here
         folder_01.files = qml_meegoharmattan/*
-        folder_01.path = /opt/qtinfo/qml
     }
+    contains(LIBS,-lsailfishsilicabackground): {
+        folder_01.files = qml_sailfish/*
+    }
+
+    folder_01.path = /opt/qtinfo/qml
     target.path = /opt/qtinfo/bin
     INSTALLS += target folder_01
 }
@@ -63,9 +69,11 @@ OTHER_FILES += \
     qml_meegoharmattan/main.qml \
     qml_meegoharmattan/MainPage.qml \
     qml_meegoharmattan/InfoView.qml \
+    qml_sailfish/main.qml \
+    qml_sailfish/MainPage.qml \
+    qml_sailfish/InfoView.qml \
     qml_desktop/main.qml \
-    qml_meegoux/main.qml \
-    qml_nextbillion/main.qml
+    qml_meegoux/main.qml
 
 RESOURCES += \
     qtquickqmls.qrc

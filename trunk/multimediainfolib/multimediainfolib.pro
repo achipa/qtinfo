@@ -19,7 +19,7 @@ maemo5 {
     contains(MOBILITY_MAJOR_VERSION,1) : message(Mobility $$MOBILITY_VERSION detected with modules: $$MOBILITY_CONFIG)
 }
 
-isEmpty(MOBILITY_VERSION) {
+isEmpty(MOBILITY_VERSION): isEmpty(MOBILITY_MAJOR_VERSION) {
     MOBILITY_CONFIG=location contacts multimedia publishsubscribe versit messaging systeminfo serviceframework sensors
     MOBILITY_VERSION=1.0.2
     MOBILITY_MAJOR_VERSION=1

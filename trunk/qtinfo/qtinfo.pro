@@ -72,7 +72,24 @@ unix:!symbian { # not funny
         desktopfile.path = /usr/share/applications
     }
     target.path = /opt/qtinfo/bin
-    INSTALLS += desktopfile icon target
+#    INSTALLS += desktopfile icon target
+}
+
+
+load(sailfishsilicabackground)
+contains(LIBS,-lsailfishsilicabackground): {
+    message(SailfishOS build)
+    # QML files and folders
+    qml.files = *.qml pages cover main.qml
+
+    # The .desktop file
+    desktop.files = qtinfo_sailfish.desktop
+
+    # Please do not modify the following line.
+    include(../sailfishapplication/sailfishapplication.pri)
+
+    OTHER_FILES = qtinfo.yaml
+
 }
 
 qnx {
@@ -82,10 +99,10 @@ qnx {
         QMAKE_POST_LINK +=    $$COPY $${PWD}/bb10icon.png $${OUT_PWD}/icon.png
         QMAKE_POST_LINK += && $$COPY $${PWD}/../cascadesui/assets $${OUT_PWD}/../cascadesui
     }
+    OTHER_FILES += \
+        bb10icon.png \
+        bar-descriptor.xml
 }
 
-include(../qtinfo_symbianplatsec.pri)
+symbian: include(../qtinfo_symbianplatsec.pri)
 
-OTHER_FILES += \
-    bb10icon.png \
-    bar-descriptor.xml

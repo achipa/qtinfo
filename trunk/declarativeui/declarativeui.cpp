@@ -92,6 +92,8 @@ bool isQmlUiAvailable()
             return true;
     if (checkQml(QLatin1String("import QtQuick 1.0\nimport com.nokia.meego 1.1\nWindow {}")))
             return true;
+    if (checkQml(QLatin1String("import QtQuick 1.1\nimport Sailfish.Silica 1.0\nApplicationWindow {}")))
+            return true;
     return false;
 }
 
