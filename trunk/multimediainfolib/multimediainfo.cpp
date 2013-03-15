@@ -3,8 +3,13 @@
 #include <qmobilityglobal.h>
 #endif
 #include <QStringList>
+#if (QT_VERSION >= 0x050000)
 #include <QAudio>
 #include <QAudiodeviceInfo>
+#else
+#include <qaudio.h>
+#include <qaudiodeviceinfo.h>
+#endif
 //#include <QAudioCaptureSource>
 #if (QTM_VERSION >= 0x010100) || (QT_VERSION >= 0x050000)
 #include <QCamera>
@@ -50,7 +55,7 @@ QList<QPair<QString, QString> > multimediaInfo()
 //        info.append(QPair<QString,QString>("Default input codecs", audioSource->defaultAudioInput()));
 
     if (!QCamera::availableDevices().isEmpty()) {
-        info.append(QPair<QString,QString>("Supported codecs", audiomediarec.supportedAudioCodecs().join(",").replace("audio/","")));
+//        info.append(QPair<QString,QString>("Supported codecs", audiomediarec.supportedAudioCodecs().join(",").replace("audio/","")));
         QCamera audiocam(QCamera::availableDevices().at(0));
         QMediaRecorder audiomediarec(&audiocam);
 
