@@ -15,9 +15,10 @@ Platforms known to run QtInfo in some shape or form (see screenshots below), in 
  - Maemo
  - Linux
 
-	Qt 4.5 needs to be installed for the application to work. For a declarative UI, Qt 4.7 or better is needed. QtInfo has preliminary Qt5 support, but unlike the rest of the libraries, it is not runtime-detected yet (the plan is to have dual binaries eventually).  
+Qt 4.5 needs to be installed for the application to work. For a declarative UI, Qt 4.7 or better is needed. QtInfo has (preliminary) Qt5 support, but unlike the rest of the libraries, it is not runtime-detected yet (the plan is to have dual binaries eventually).  
 
-	Currently displays (all the info is obtained at run-time, not compile-time):  
+Currently displays (all the info is obtained at run-time, not compile-time):  
+
  - Qt version
  - Mobility version
  - Installed Qt modules
@@ -44,5 +45,15 @@ Channels supported for relaying the info:
  - Pastebin
  - Email
  - File on mass-storage
+
+
+Screenshots or it didn't happen:  
+
+![Sailfish](/bin/screenshots/sailfish-qtinfo.png)
+![Blackberry10](/bin/screenshots/IMG_00000020.png)
+![Harmattan](/bin/screenshots/harmattan.png)
+![Symbian](/bin/screenshots/qtinfo_symbian.png)
+![Maemo5](/bin/screenshots/qtinfo_maemo.png)
+![Random desktop, circa 1995 AD](/bin/screenshots/qtinfo_snap.png)
 
 
