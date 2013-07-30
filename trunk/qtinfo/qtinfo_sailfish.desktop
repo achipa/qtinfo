@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=untitled
+Icon=icon-launcher-gallery
+Exec=invoker --type=j -s /opt/sdk/bin/untitled
+Comment=Sailfish UI application
+
+

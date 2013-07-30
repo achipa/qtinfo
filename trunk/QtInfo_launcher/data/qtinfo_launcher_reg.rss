@@ -1,0 +1,19 @@
+/*
+============================================================================
+ Name		: QtInfo_launcher.mmp
+ Author	  : Lucian Tomuta
+ Copyright   : 2011 Forum Nokia
+ Description : Registration resource file for QtInfo Launcher.
+============================================================================
+*/
+
+#include <appinfo.rh>
+
+UID2 KUidAppRegistrationResourceFile
+UID3 0xA00002D7
+
+RESOURCE APP_REGISTRATION_INFO
+	{
+	app_file="QtInfo_launcher";
+	localisable_resource_file="\\resource\\apps\\qtinfo_launcher";
+	}

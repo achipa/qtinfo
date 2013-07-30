@@ -1,0 +1,1 @@
+ /home/attila/bbndk/host_10_0_9_284/linux/x86/usr/bin/blackberry-nativepackager -package -appVersion 1.0.0 -buildId 1 -sign /tmp/qtinfo.bar /home/attila/src/QtInfo/trunk/qtinfo/bar-descriptor.xml -configuration Device-Release -D QNX_TARGET=~/src/QtInfo/QtInfo-build-BB10_1011-Default_build_Release -cskpass [PLACEHOLDER]

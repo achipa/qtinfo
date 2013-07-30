@@ -1,0 +1,36 @@
+/*
+============================================================================
+ Name		: QtInfo_launcher.mmp
+ Author	  : Lucian Tomuta
+ Copyright   : 2011 Forum Nokia
+ Description : This is the project specification file for QtInfo_launcher.
+============================================================================
+*/
+
+TARGET		  QtInfo_launcher.exe
+TARGETTYPE	  exe
+UID			 0 0xA00002D7
+
+USERINCLUDE	 ..\inc
+SYSTEMINCLUDE   \epoc32\include
+
+SOURCEPATH	  ..\src
+SOURCE		  QtInfo_launcher.cpp
+
+SOURCEPATH			..\data
+START RESOURCE		qtinfo_launcher.rss
+TARGETPATH		/resource/apps
+END
+
+SOURCEPATH			..\data
+START RESOURCE		qtinfo_launcher_reg.rss
+TARGETPATH		/private/10003a3f/import/apps
+END
+
+LIBRARY		 euser.lib apparc.lib apgrfx.lib 
+LIBRARY  aknnotify.lib eiksrv.lib
+
+
+#ifdef ENABLE_ABIV2_MODE
+  DEBUGGABLE_UDEBONLY
+#endif

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>qt47.qml</file>
+        <file>qtquick10.qml</file>
+        <file>qtquick11.qml</file>
+        <file>qtquick20.qml</file>
+    </qresource>
+</RCC>
