@@ -7,7 +7,13 @@ TEMPLATE = lib
 DEPENDPATH += .
 INCLUDEPATH += .
 
-QT += core gui declarative
+QT += core gui
+
+contains (QT_MAJOR_VERSION,5):contains (QT_MINOR_VERSION,0): { # in 5.0 we didn't need this?
+    QT += quick1
+} else {
+    QT += declarative
+}
 
 # Input
 HEADERS += declarativeui.h
@@ -45,20 +51,21 @@ exists($$QMAKE_INCDIR_QT"/../qmsystem2/qmkeys.h"):!contains(MEEGO_EDITION,harmat
   DEFINES += MEEGO_EDITION_HARMATTAN
 }
 
-load(sailfishsilicabackground)
-
 unix:!symbian: {
     contains(MEEGO_EDITION,harmattan): {
 	    # Add more folders to ship with the application, here
         folder_01.files = qml_meegoharmattan/*
     }
-    contains(LIBS,-lsailfishsilicabackground): {
-        folder_01.files = qml_sailfish/*
-    }
 
     folder_01.path = /opt/qtinfo/qml
     target.path = /opt/qtinfo/bin
     INSTALLS += target folder_01
+
+    packagesExist(sailfishapp) {
+        folder_01.files = qml_sailfish/*
+        folder_01.path = /usr/share/harbour-qtinfo/qml
+        target.path = /usr/share/harbour-qtinfo/bin
+    }
 }
 
 OTHER_FILES += \
@@ -73,7 +80,8 @@ OTHER_FILES += \
     qml_sailfish/MainPage.qml \
     qml_sailfish/InfoView.qml \
     qml_desktop/main.qml \
-    qml_meegoux/main.qml
+    qml_meegoux/main.qml \
+    qml_sailfish/LoadingPage.qml
 
 RESOURCES += \
     qtquickqmls.qrc

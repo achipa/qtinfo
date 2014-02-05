@@ -11,6 +11,7 @@ SUBDIRS = \
           multimediainfolib \
           qtquickinfolib \
           declarativeui \
+          qt5declarativeui \
           qtinfo 
 
 qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib sqlinfolib multimediainfolib qtquickinfolib declarativeui
@@ -20,7 +21,8 @@ contains(QT_VERSION, ^4\\.[0-6]\\..*) {
     SUBDIRS -= qtquickinfolib declarativeui
     qtinfo.depends -= qtquickinfolib declarativeui
 }
-message($$CONFIG)
+message(CONFIG: $$CONFIG)
+message(QT_MODULES: $$QT_MODULES)
 contains(QT_MAJOR_VERSION,5) {
     SUBDIRS += qtquick2infolib
     qtinfo.depends += qtquick2infolib
@@ -62,6 +64,17 @@ OTHER_FILES += \
 unix:!symbian { # not funny
     target.path = /opt/qtinfo/bin
     INSTALLS += target
+}
+
+packagesExist(sailfishapp) {
+    target.path = /usr/share/harbour-qtinfo/bin
+    INSTALLS += target
+
+# QT_MODULES:
+# bluetooth compositor concurrent contacts core dbus declarative docgallery feedback gui location multimedia multimediawidgets network opengl openglextensions
+# organizer platformsupport positioning publishsubscribe qml qtmultimediaquicktools quick quickparticles script scripttools sensors serviceframework sql svg
+# versit versitorganizer webkit widgets xml xmlpatterns
+
 }
 
 symbian:OTHER_FILES += magic.pkg

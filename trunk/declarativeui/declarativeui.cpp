@@ -94,6 +94,7 @@ bool isQmlUiAvailable()
             return true;
     if (checkQml(QLatin1String("import QtQuick 1.1\nimport Sailfish.Silica 1.0\nApplicationWindow {}")))
             return true;
+    qDebug() << "Module loadable, but no known QtQuick version available";
     return false;
 }
 

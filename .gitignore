@@ -213,3 +213,13 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+
+QtInfo-build-*
+*.pro.user
+/build-QtInfo*
+/QtInfo-build*
+Makefile
+moc/
+qrc_*
+ui_*
