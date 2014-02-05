@@ -326,7 +326,7 @@ void InfoLoader::addToTemplate(QString key, QString value)
     html = html.replace("__ROWTEMPLATE__", rowstr.arg(key).arg(value).arg("__ROWTEMPLATE__"));
     rawpairs.append(qMakePair(key, value));
 
-#ifndef Q_OS_BLACKBERRY
+#if !defined(Q_OS_BLACKBERRY) && !defined(Q_OS_SAILFISH)
     QTextBrowser tb;
     tb.setHtml(value);
     out << key << ": " << tb.toPlainText() << endl;
@@ -407,6 +407,9 @@ void InfoLoader::loadInfo(QString key, QString libname, QString libfile, const c
     {
 #ifdef Q_OS_BLACKBERRY
         QString libname(loadLib("app/native/lib"+libfile+".so")); // hmm... might need to include ./ as one of the possible prefixes ?
+#elif Q_OS_SAILFISH
+        // due to Harbour policies...
+        QString libname(loadLib("/usr/share/harbour-qtinfo/bin/lib"+libfile+".so")); // hmm... might need to include ./ as one of the possible prefixes ?
 #else
         QString libname(loadLib(qApp->applicationDirPath()+"/"+libfile)); // hmm... might need to include ./ as one of the possible prefixes ?
 #endif

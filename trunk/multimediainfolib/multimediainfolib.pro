@@ -57,6 +57,11 @@ contains(QT_MAJOR_VERSION,5) {
         target.path = /opt/qtinfo/bin
         INSTALLS += target
 
+        packagesExist(sailfishapp) {
+            target.path = /usr/share/harbour-qtinfo/bin
+        }
+
+
         # don't do this in your projects, we're trained professionals
 
         maemo5 {

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Comment=Sailfish UI application
+X-Nemo-Application-Type=silica-qt5
+Name=QtInfo
+Icon=harbour-qtinfo
+Exec=harbour-qtinfo
+# Exec=invoker --type=j -s /opt/sdk/bin/untitled
+
+

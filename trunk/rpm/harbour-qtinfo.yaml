@@ -1,0 +1,27 @@
+Name: harbour-qtinfo
+Summary: Your Qt Development Swiss Army Knife Info-Tool
+Version: 0.1
+Release: 1
+Group: Qt/Qt
+URL: http://github.com/achipa/qtinfo
+License: GPLv2
+Sources:
+- '%{name}-%{version}.tar.bz2'
+Description: |
+  Your Qt Development Swiss Army Knife Info-Tool
+Configure: none
+Builder: qtc5
+PkgConfigBR:
+- Qt5Quick
+- Qt5Qml
+- Qt5Core
+- sailfishapp >= 0.0.10
+Requires:
+- sailfishsilica-qt5 >= 0.10.9
+- libsailfishapp
+Files:
+- '%{_bindir}'
+- '%{_datadir}/%{name}'
+- '%{_datadir}/applications/%{name}.desktop'
+- '%{_datadir}/icons/hicolor/86x86/apps/%{name}.png'
+

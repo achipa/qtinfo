@@ -107,7 +107,6 @@ BackgroundItem {
                   color: Theme.highlightColor
                   font.family: Theme.fontFamilyHeading
                   font.pixelSize: Theme.fontSizeMedium
-
 ////////                  platformStyle: LabelStyle { fontPixelSize: 32; textColor: "white" }
     //            text: "ASDF"
     //              wrapMode: Text.WrapAnywhere

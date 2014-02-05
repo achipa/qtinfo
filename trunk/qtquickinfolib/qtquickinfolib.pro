@@ -7,7 +7,19 @@ TEMPLATE = lib
 DEPENDPATH += .
 INCLUDEPATH += .
 
-QT += core gui declarative
+QT += core gui
+contains (QT_MAJOR_VERSION,5):contains(QT_MINOR_VERSION,0):{
+    # Hey, how about we make a non-backwards compatible change, and then change it back without deprecation in the next point release?
+    # https://codereview.qt-project.org/#change,35516
+    QT += qtquick1 qtdeclarative
+
+#} else: contains(QT_MAJOR_VERSION,5):{
+    # 5.1 and beyond
+#    QT += quick declarative
+
+} else {
+    QT += declarative
+}
 
 # Input
 HEADERS += qtquickinfo.h
@@ -32,6 +44,11 @@ symbian {
 unix:!symbian: {
     target.path = /opt/qtinfo/bin
     INSTALLS += target
+
+    packagesExist(sailfishapp) {
+        target.path = /usr/share/harbour-qtinfo/bin
+    }
+
 }
 
 OTHER_FILES += \

@@ -5,7 +5,7 @@
 #include <QStringList>
 #if (QT_VERSION >= 0x050000)
 #include <QAudio>
-#include <QAudiodeviceInfo>
+#include <QAudioDeviceInfo>
 #else
 #include <qaudio.h>
 #include <qaudiodeviceinfo.h>

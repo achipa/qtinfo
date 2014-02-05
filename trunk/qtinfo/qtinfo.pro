@@ -13,10 +13,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp  \
     mainwindow.cpp \
-    infoloader.cpp
+    infoloader.cpp \
+    mainqqview.cpp
 
 HEADERS  += mainwindow.h \
-    infoloader.h
+    infoloader.h \
+    mainqqview.h
 
 FORMS    += mainwindow.ui
 
@@ -73,23 +75,48 @@ unix:!symbian { # not funny
         desktopfile.path = /usr/share/applications
     }
     target.path = /opt/qtinfo/bin
+
 #    INSTALLS += desktopfile icon target
 }
 
-
-load(sailfishsilicabackground)
-contains(LIBS,-lsailfishsilicabackground): {
+packagesExist(sailfishapp) {
     message(SailfishOS build)
+    TARGET = harbour-qtinfo
+
+    CONFIG += sailfishapp
+    SOURCES -= main.cpp
+# mainwindow.cpp
+#    HEADERS -= mainwindow.h
+#    QT -= widgets
+    SOURCES += mainsailfish.cpp
+
+    INSTALLS += qml hicon desktopfile target
+    INSTALLS -= desktop
+
+    # This gets ignored. WTF
+    target.path = /usr/share/$${TARGET}/bin
+
+    # If called icon, it also gets ignored
+    hicon.files = $${TARGET}.png
+    hicon.path = /usr/share/icons/hicolor/86x86/apps
+
+    desktopfile.files = $${TARGET}.desktop
+    desktopfile.path =  /usr/share/applications
+
+    DEFINES += Q_OS_SAILFISH
+
+
+
     # QML files and folders
-    qml.files = *.qml pages cover main.qml
+   # qml.files = *.qml pages cover main.qml
 
     # The .desktop file
-    desktop.files = qtinfo_sailfish.desktop
+    #desktop.files = qtinfo_sailfish.desktop
 
     # Please do not modify the following line.
-    include(../sailfishapplication/sailfishapplication.pri)
+  #  include(../sailfishapplication/sailfishapplication.pri)
 
-    OTHER_FILES = qtinfo.yaml
+   # OTHER_FILES = qtinfo.yaml
 
 }
 

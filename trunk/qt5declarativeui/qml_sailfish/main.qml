@@ -4,6 +4,8 @@ import Sailfish.Silica 1.0
 
 ApplicationWindow {
     id: window
+    cover: Qt.resolvedUrl("CoverPage.qml")
+
 //    initialPage: MainPage {}
 
 //    showStatusBar: true

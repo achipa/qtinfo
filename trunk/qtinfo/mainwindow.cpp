@@ -35,7 +35,12 @@ MainWindow::~MainWindow()
 QWidget* MainWindow::loadWidget(QString library, const char* function)
 {
     typedef QWidget* (*fn)(QList<QPair<QString, QString> >, QObject*);
+#if Q_OS_SAILFISH
+        // due to Harbour policies...
+    fn v = (fn) QLibrary::resolve(infoloader->loadLib("/usr/share/harbour-qtinfo/bin/"+library), function);
+#else
     fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/"+library), function);
+#endif
     qDebug() << library <<  v;
     if (v) {
         return v(infoloader->resultAsRawpairs(), this);
@@ -48,6 +53,9 @@ bool MainWindow::callBoolFunction(QString library, const char *function)
     typedef bool (*fn)();
 #ifdef MEEGO_EDITION_HARMATTAN
     fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/lib"+library), function);
+#elif Q_OS_SAILFISH
+        // due to Harbour policies...
+    fn v = (fn) QLibrary::resolve(infoloader->loadLib("/usr/share/harbour-qtinfo/bin/"+library), function);
 #else
     fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/"+library), function);
 #endif
@@ -78,20 +86,36 @@ void MainWindow::showUI()
     bool qmlUI = false;
 
     // If QtDeclarative and Qt Quick Components are available, use QML UI
-    if (infoloader->isLoaded("QtDeclarative")) { // go for fancy declarative UI instead of QWidgets
-        sout << "Declarative module present, contemplating QML UI";
-        if (callBoolFunction("declarativeui", "isQmlUiAvailable")) {
-            sout << "loading QML UI";
-            QWidget* widget = loadWidget("declarativeui", "declarativeUI");
-            if (widget) {
-                qmlUI = true;
-                ui->textBrowser->setVisible(false);
-                ui->widget->setEnabled(true);
-                ui->widget->setVisible(true);
-                widget->showFullScreen();
-                // Note that QML buttons should call the same methods as the auto-slot-connected buttons
-            }
+    QWidget* widget = NULL;
+    if (infoloader->isLoaded("Qt5Quick") || infoloader->isLoaded("QtQuick")) { // go for fancy declarative UI instead of QWidgets
+        sout << "QtQuick module present, contemplating QML UI";
+        qDebug() << "QtQuick module present, contemplating QML UI";
+        if (callBoolFunction("qt5declarativeui", "isQmlUiAvailable")) {
+            sout << "loading QML5 UI";
+            qDebug() << "loading QML5 UI";
+            widget = loadWidget("qt5declarativeui", "declarativeUI");
+            sout << widget;
+            qDebug() << widget;
         }
+    }
+    if (widget == NULL && (infoloader->isLoaded("QtDeclarative") || infoloader->isLoaded("Qt5Declarative"))) { // go for fancy declarative UI instead of QWidgets
+        sout << "Declarative module present, contemplating QML UI";
+
+        if (widget == NULL && callBoolFunction("declarativeui", "isQmlUiAvailable")) {
+            sout << "loading QML UI";
+            widget = loadWidget("declarativeui", "declarativeUI");
+        }
+    }
+    if (widget != NULL) { // we have a living breathing QtQuick widget!
+        sout << "QML UI is a GO!";
+        qDebug() << "QML UI is a GO!";
+        qmlUI = true;
+        widget->setParent(this);
+        ui->textBrowser->setVisible(false);
+        ui->widget->setEnabled(true);
+        ui->widget->setVisible(true);
+        widget->showFullScreen();
+        // Note that QML buttons should call the same methods as the auto-slot-connected buttons
     } else {
 //        this->statusBar()->setVisible(true);
         ui->emailButton->setVisible(true);

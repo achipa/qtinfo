@@ -31,6 +31,11 @@ symbian {
 unix:!symbian: {
     target.path = /opt/qtinfo/bin
     INSTALLS += target
+
+    packagesExist(sailfishapp) {
+        target.path = /usr/share/harbour-qtinfo/bin
+    }
+
 }
 
 include(../qtinfo_symbianplatsec.pri)

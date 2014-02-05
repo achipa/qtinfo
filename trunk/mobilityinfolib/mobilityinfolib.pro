@@ -60,6 +60,10 @@ unix:!symbian { # not funny
     target.path = /opt/qtinfo/bin
     INSTALLS = target
 
+    packagesExist(sailfishapp) {
+        target.path = /usr/share/harbour-qtinfo/bin
+    }
+
     # don't do this in your projects, we're trained professionals
 
     maemo5 {
