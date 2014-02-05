@@ -5,6 +5,7 @@ Display basic Qt-related information in an easy-to-report-to-developer way. It i
 
 Platforms known to run QtInfo in some shape or form (see screenshots below), in reverse order of appearance:  
 
+ - Android
  - SailfishOS
  - BlackberryOS 10
  - MeeGo (meego.com MeeGo)

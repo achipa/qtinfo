@@ -17,6 +17,11 @@ SOURCES += qtquick2info.cpp
 unix:!symbian: {
     target.path = /opt/qtinfo/bin
     INSTALLS += target
+
+    packagesExist(sailfishapp) {
+        target.path = /usr/share/harbour-qtinfo/bin
+    }
+
 }
 
 OTHER_FILES += \
