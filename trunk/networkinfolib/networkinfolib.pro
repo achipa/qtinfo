@@ -7,17 +7,17 @@ TEMPLATE = lib
 DEPENDPATH += .
 INCLUDEPATH += .
 
-QT += core gui webkit network
+QT += core gui network
 
 # Input
-HEADERS += webkitinfo.h
-SOURCES += webkitinfo.cpp
+HEADERS += networkinfo.h
+SOURCES += networkinfo.cpp
 
 symbian {
     #Build STDDLL
     CONFIG += stdbinary
 
-    TARGET = webkitinfolib
+    TARGET = networkinfolib
 
     #Symbian specific definitions
     MMP_RULES += EXPORTUNFROZEN
