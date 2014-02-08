@@ -12,7 +12,6 @@ SUBDIRS = \
           multimediainfolib \
           qtquickinfolib \
           declarativeui \
-          qt5declarativeui \
           qtinfo 
 
 qtinfo.depends = qtquickinfolib glinfolib webkitinfolib mobilityinfolib sqlinfolib multimediainfolib qtquickinfolib declarativeui
@@ -29,10 +28,21 @@ android {
 message(CONFIG: $$CONFIG)
 message(QT_MODULES: $$QT_MODULES)
 contains(QT_MAJOR_VERSION,5) {
-    SUBDIRS += qtquick2infolib
-    qtinfo.depends += qtquick2infolib
-    SUBDIRS -= mobilityinfolib # multimediainfolib
-    qtinfo.depends -= mobilityinfolib # multimediainfolib
+    # introduced in 5.0
+    SUBDIRS += qtquick2infolib qt5declarativeui
+    qtinfo.depends += qtquick2infolib qt5declarativeui
+
+    SUBDIRS -= mobilityinfolib
+    qtinfo.depends -= mobilityinfolib
+
+    contains(QT_MINOR_VERSION,[1-9]) { # introduced in Qt 5.1
+        SUBDIRS += sensorinfolib
+        qtinfo.depends += sensorinfolib
+    }
+    contains(QT_MINOR_VERSION,[2-9]) { # introduced in Qt 5.2
+        SUBDIRS += nfcinfolib # btinfolib
+        qtinfo.depends += nfcinfolib # btinfolib
+    }
 }
 
 # Symbian doesn't do the GL module

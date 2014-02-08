@@ -108,26 +108,34 @@ void InfoLoader::run()
     qtlibs << "QtXmlPatterns";
     qtlibs << "QtXml";
 
+    qtlibs << "Qt5AndroidExtras";         // 5.2
+    qtlibs << "Qt5Bluetooth";             // 5.2
     qtlibs << "Qt5CLucene";
     qtlibs << "Qt5Concurrent";
     qtlibs << "Qt5Core";
     qtlibs << "Qt5Declarative";
+    qtlibs << "Qt5DBus";
     qtlibs << "Qt5Designer";
     qtlibs << "Qt5DesignerComponents";
     qtlibs << "Qt5Gui";
     qtlibs << "Qt5Help";
+    qtlibs << "Qt5MacExtras";             // 5.2
     qtlibs << "Qt5Multimedia";
     qtlibs << "Qt5MultimediaQuick_p";
     qtlibs << "Qt5MultimediaWidgets";
     qtlibs << "Qt5Network";
+    qtlibs << "Qt5Nfc";                   // 5.2
     qtlibs << "Qt5OpenGL";
+    qtlibs << "Qt5Positioning";           // 5.2
     qtlibs << "Qt5PrintSupport";
     qtlibs << "Qt5Qml";
     qtlibs << "Qt5Quick";
     qtlibs << "Qt5QuickParticles";
     qtlibs << "Qt5QuickTest";
+    qtlibs << "Qt5SerialPort";            // 5.1
     qtlibs << "Qt5Script";
     qtlibs << "Qt5ScriptTools";
+    qtlibs << "Qt5Sensors";               // 5.1
     qtlibs << "Qt5Sql";
     qtlibs << "Qt5Svg";
     qtlibs << "Qt5Test";
@@ -135,6 +143,8 @@ void InfoLoader::run()
     qtlibs << "Qt5WebKit";
     qtlibs << "Qt5WebKitWidgets";
     qtlibs << "Qt5Widgets";
+    qtlibs << "Qt5WinExtras";             // 5.2
+    qtlibs << "Qt5X11Extras";             // 5.1
     qtlibs << "Qt5Xml";
     qtlibs << "Qt5XmlPatterns";
 
@@ -155,7 +165,7 @@ void InfoLoader::run()
     qtmobilitylibs << "QtVersit";
     qtlibs.append(qtmobilitylibs);
 
-    int progressTotalSteps = qtlibs.count() + 12; // 12 = number of loadInfos we're going to do later. #automateme
+    int progressTotalSteps = qtlibs.count() + 14; // 14 = number of loadInfos we're going to do later. #automateme
     int progressStep = 0;
 
     foreach(QString libname, qtlibs) {
@@ -217,6 +227,14 @@ void InfoLoader::run()
     emit newInfoAvailable("Loading OpenGL...");
     loadInfo("OpenGL", "QtOpenGL", "glinfolib", "GLInfo");
     loadInfo("OpenGL", "Qt5OpenGL", "glinfolib", "GLInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
+
+    emit newInfoAvailable("Loading sensors...");
+    loadInfo("Sensors", "Qt5Sensors", "sensorinfolib", "sensorInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
+
+    emit newInfoAvailable("Loading nfc...");
+    loadInfo("NFC", "Qt5Nfc", "nfcinfolib", "nfcInfo");
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading network...");
@@ -405,7 +423,7 @@ QString InfoLoader::loadLib(QString libname)
         return lib.fileName();
     } else {
     sout << lib.errorString() << endl;
-        qDebug() << lib.errorString();
+        qDebug() << "ERR: " << lib.errorString();
         return QString();
     }
 }
