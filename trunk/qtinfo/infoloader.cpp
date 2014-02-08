@@ -52,6 +52,10 @@ void InfoLoader::run()
 
     addToTemplate(key, value);
 
+#if QT_VERSION >= 0x050000
+    addToTemplate("Platform", qApp->platformName());
+#endif
+
     emit newInfoAvailable("Checking build date...");
     key = "Qt build";
     value = QLibraryInfo::buildDate().toString()+ ", ";
@@ -151,7 +155,7 @@ void InfoLoader::run()
     qtmobilitylibs << "QtVersit";
     qtlibs.append(qtmobilitylibs);
 
-    int progressTotalSteps = qtlibs.count() + 11; // 11 = number of loadInfos we're going to do later. #automateme
+    int progressTotalSteps = qtlibs.count() + 12; // 12 = number of loadInfos we're going to do later. #automateme
     int progressStep = 0;
 
     foreach(QString libname, qtlibs) {
@@ -213,6 +217,11 @@ void InfoLoader::run()
     emit newInfoAvailable("Loading OpenGL...");
     loadInfo("OpenGL", "QtOpenGL", "glinfolib", "GLInfo");
     loadInfo("OpenGL", "Qt5OpenGL", "glinfolib", "GLInfo");
+    emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
+
+    emit newInfoAvailable("Loading network...");
+    loadInfo("Network", "QtNetwork", "networkinfolib", "networkInfo");
+    loadInfo("Network", "Qt5Network", "networkinfolib", "networkInfo");
     emit progressChange((int)(++progressStep*100.0/(float)progressTotalSteps));
 
     emit newInfoAvailable("Loading webkit...");

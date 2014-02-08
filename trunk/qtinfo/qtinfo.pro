@@ -138,7 +138,14 @@ qnx {
 
 symbian: include(../qtinfo_symbianplatsec.pri)
 
-# ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+# http://doc-snapshot.qt-project.org/qt5-stable/deployment-android.html
+# moved to per-.pro file install
+#
+#ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+#
+#android {
+#    #ANDROID_EXTRA_LIBS += $${OUT_PWD}/../glinfolib/libglinfolib.so
+#}
 
 OTHER_FILES += \
     ../android/AndroidManifest.xml

@@ -7,6 +7,7 @@ SUBDIRS = \
           sqlinfolib \
           glinfolib \
           webkitinfolib \
+          networkinfolib \
           mobilityinfolib \
           multimediainfolib \
           qtquickinfolib \

@@ -17,6 +17,19 @@ SOURCES += multimediainfo.cpp
 contains(QT_MAJOR_VERSION,5) {
     QT += multimedia
 
+    TARGET = multimediainfolib
+    target.path = /opt/qtinfo/bin
+    INSTALLS += target
+
+    packagesExist(sailfishapp) {
+        target.path = /usr/share/harbour-qtinfo/bin
+    }
+
+    android {
+        contains(QT_ARCH,i386): target.path = /libs/x86
+        contains(QT_ARCH,arm): target.path = /libs/armv7
+    }
+
 } else {
     maemo5 {
         CONFIG += $$MOBCONFIG
@@ -56,11 +69,6 @@ contains(QT_MAJOR_VERSION,5) {
     unix:!symbian { # not funny
         target.path = /opt/qtinfo/bin
         INSTALLS += target
-
-        packagesExist(sailfishapp) {
-            target.path = /usr/share/harbour-qtinfo/bin
-        }
-
 
         # don't do this in your projects, we're trained professionals
 
