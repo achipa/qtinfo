@@ -1,7 +1,7 @@
 #include "mainqqview.h"
 #include <QTimer>
 #include <QDebug>
-#include <QQmlContext>
+#include <QtQml/QQmlContext>
 #include <QGuiApplication>
 
 MainQQView::MainQQView(QQuickView* qqv) : qqview(qqv), infoloader(new InfoLoader(this))

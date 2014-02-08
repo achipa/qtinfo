@@ -13,12 +13,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp  \
     mainwindow.cpp \
-    infoloader.cpp \
-    mainqqview.cpp
+    infoloader.cpp
+    #mainqqview.cpp
 
 HEADERS  += mainwindow.h \
-    infoloader.h \
-    mainqqview.h
+    infoloader.h
+    #mainqqview.h
 
 FORMS    += mainwindow.ui
 
@@ -31,6 +31,10 @@ qnx {
     CONFIG += cascades
     LIBS   += -lbbdata
 
+}
+
+android {
+    QT += opengl declarative quick sql multimedia qml
 }
 
 symbian {
@@ -133,4 +137,9 @@ qnx {
 }
 
 symbian: include(../qtinfo_symbianplatsec.pri)
+
+# ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+OTHER_FILES += \
+    ../android/AndroidManifest.xml
 

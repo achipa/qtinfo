@@ -21,6 +21,10 @@ contains(QT_VERSION, ^4\\.[0-6]\\..*) {
     SUBDIRS -= qtquickinfolib declarativeui
     qtinfo.depends -= qtquickinfolib declarativeui
 }
+android {
+    SUBDIRS -= webkitinfolib # no webkit on android for now
+    qtinfo.depends -= webkitinfolib
+}
 message(CONFIG: $$CONFIG)
 message(QT_MODULES: $$QT_MODULES)
 contains(QT_MAJOR_VERSION,5) {

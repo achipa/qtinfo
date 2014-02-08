@@ -2,7 +2,7 @@
 #define MAINQQVIEW_H
 
 #include "infoloader.h"
-#include <QQuickView>
+#include <QtQuick/QQuickView>
 
 class MainQQView : QObject
 {

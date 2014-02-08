@@ -372,8 +372,8 @@ QString InfoLoader::loadLib(QString libname)
     QTextStream sout(stdout);
     sout << lib.errorString() << endl;
 //    qDebug() << lib.errorString();
-    if (!lib.load()) {
-        foreach (QString prefix, QStringList() << "" << "lib") {
+    if (!lib.load()) { // FIXME Add Android dir only on Android
+        foreach (QString prefix, QStringList() << "" << "lib" << "/data/local/tmp/qt/lib/lib") {
             foreach(QString version, QStringList() << "" << "1" << "2" << "3" << "4" << "5") {
                 lib.setFileNameAndVersion(prefix + libname, version.toInt()); // Linux naming
                 if (lib.load()) break;
