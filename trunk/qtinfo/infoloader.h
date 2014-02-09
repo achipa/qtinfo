@@ -6,6 +6,7 @@
 #include <QTextStream>
 #include <QStringList>
 
+
 class InfoLoader : public QThread
 {
     Q_OBJECT
@@ -28,6 +29,8 @@ public:
 
     int divineMobilityVersion();
     static QString loadLib(QString libname);
+    static QString lastPathHit; // hack - these two are static public to speed up loadLib. Real solution coming soon TM
+    static QString lastVersionHit;
 
 private:
     QString html;
@@ -36,6 +39,8 @@ private:
     QString sectionstr;
     QTextStream out;
     QStringList installedlibs;
+    QString Qt4LibPath;
+    QString Qt5LibPath;
     QList<QPair<QString, QString> > rawpairs;
     void loadInfo(QString key, QString libname, QString libfile, const char* infofunc); // pvt because of out
     bool loadValues(QString library, QString defaultKey, const char* function); // pvt because of out, used by loadInfo

@@ -9,6 +9,7 @@
 #include <QLocale>
 #include <QTextBrowser>
 #include <QApplication>
+#include <QDir>
 
 #ifdef Q_OS_BLACKBERRY
 #include <bb/cascades/Application>
@@ -26,6 +27,9 @@
     __SECTIONROWTEMPLATE__\
     </table>\n\
     __SECTIONTEMPLATE__"
+
+QString InfoLoader::lastPathHit = ""; // statics are evil. (pre-)C++11 C++ makes them heinous
+QString InfoLoader::lastVersionHit = "";
 
 InfoLoader::InfoLoader(QObject *parent) :
     QThread(parent),
@@ -55,7 +59,14 @@ void InfoLoader::run()
 #if QT_VERSION >= 0x050000
     addToTemplate("Platform", qApp->platformName());
 #endif
-
+/*
+#ifdef Q_OS_ANDROID
+    // This does not work. WHY?!
+    qApp->addLibraryPath("/data/data/org.kde.necessitas.ministro/files/dl/0/stable/lib");
+    qApp->addLibraryPath("/data/local/tmp/qt/lib/lib");
+    qApp->addLibraryPath("/data/data/eu.licentia.necessitas.ministro/files/dl/0/stable/lib");
+#endif
+*/
     emit newInfoAvailable("Checking build date...");
     key = "Qt build";
     value = QLibraryInfo::buildDate().toString()+ ", ";
@@ -399,21 +410,40 @@ QString InfoLoader::loadLib(QString libname)
     QTextStream sout(stdout);
     sout << lib.errorString() << endl;
 //    qDebug() << lib.errorString();
-    if (!lib.load()) {
-        QStringList prefixlist = QStringList() << "" << "lib";
+    QString pathHit = "";
+    QString versionHit = "";
+
+    if (!lib.load()){
+        QStringList prefixlist = QStringList() << "" << "lib" << qApp->applicationDirPath() + "/" << qApp->applicationDirPath() + "/lib" ;
 #ifdef Q_OS_ANDROID
-        prefixlist << "/data/local/tmp/qt/lib/lib";
+       prefixlist << "/data/data/org.kde.necessitas.ministro/files/dl/0/stable/lib/lib";
+       prefixlist << "/data/local/tmp/qt/lib/lib";
+       prefixlist << "/data/data/eu.licentia.necessitas.ministro/files/dl/0/stable/lib";
 #endif
+        if (!InfoLoader::lastPathHit.isEmpty()) {
+            prefixlist.removeAll(InfoLoader::lastPathHit);
+            prefixlist.prepend(InfoLoader::lastPathHit);
+        }
+        qDebug() << qApp->libraryPaths().join(',');
         foreach (QString prefix, prefixlist) {
+            pathHit = prefix;
+
             foreach(QString version, QStringList() << "" << "1" << "2" << "3" << "4" << "5") {
+                versionHit = version;
+
                 lib.setFileNameAndVersion(prefix + libname, version.toInt()); // Linux naming
+                sout << "try " << prefix << libname << "outcome: " << lib.errorString() << endl;
                 if (lib.load()) break;
-    sout << lib.errorString() << endl;
-        qDebug() << lib.errorString();
-                lib.setFileName(prefix + libname + version); // Windows and Symbian naming
-    sout << lib.errorString() << endl;
-        qDebug() << lib.errorString();
+                else
+                   qDebug() << "try " << prefix << libname << "outcome: " << lib.errorString();
+
+                lib.setFileName(prefix + libname + version); // Windows Symbian Android naming
+                sout << "try " << prefix << libname << version << "outcome: " << lib.errorString() << endl;
+                qDebug() << "try " << prefix << libname << version << "outcome: " << lib.errorString();
                 if (lib.load()) break;
+                else
+                   qDebug() << "try " << prefix << libname << "outcome: " << lib.errorString();
+
             }
             if (lib.isLoaded()) break;
         }
@@ -423,7 +453,26 @@ QString InfoLoader::loadLib(QString libname)
     qDebug() << libname << "loaded " << loaded;
 
     if (loaded) {
+        lastPathHit = pathHit;
+        lastVersionHit = versionHit;
+        qDebug() << "Found at " << pathHit + versionHit;
+        if (lastPathHit != pathHit && !pathHit.isEmpty()) {
+            qDebug () << "Found in non-default path, adding to library path";
+            qApp->addLibraryPath(pathHit);
+        }
+
+#if !defined(Q_OS_ANDROID) && !defined(Q_OS_SAILFISH)
+        // Android:
+        // for some Android reason, if it's not originally linked to the .so location and you randomly dlopen, the lib-paths will not respected
+        // thus after trying to load the Qt* libs we KEEP them in memory so when the infolibs get dlopen'd it doesn't bork
+        // For background, see: https://code.google.com/p/android/issues/detail?id=34416 and https://github.com/ikonst/android-dl
+
+        // Sailfish:
+        // The 5.1 Qt in there seems quite crashy - esp the qtquick module doesn't seem to like being unloaded and reloaded
+        // (or just conflicts somehow with qtdeclarative) and segfauls, so not unloading helps
+
         lib.unload();
+#endif
         return lib.fileName();
     } else {
     sout << lib.errorString() << endl;
@@ -438,9 +487,11 @@ void InfoLoader::loadInfo(QString key, QString libname, QString libfile, const c
     {
 #ifdef Q_OS_BLACKBERRY
         QString libname(loadLib("app/native/lib"+libfile+".so")); // hmm... might need to include ./ as one of the possible prefixes ?
-#elif Q_OS_SAILFISH
+#elif defined(Q_OS_SAILFISH)
         // due to Harbour policies...
         QString libname(loadLib(QString() + TARGETPATH+"lib"+libfile+".so")); // hmm... might need to include ./ as one of the possible prefixes ?
+#elif defined(Q_OS_ANDROID)
+        QString libname(loadLib(libfile)); // hmm... might need to include ./ as one of the possible prefixes ?
 #else
         QString libname(loadLib(qApp->applicationDirPath()+"/"+libfile)); // hmm... might need to include ./ as one of the possible prefixes ?
 #endif

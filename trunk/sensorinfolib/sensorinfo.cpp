@@ -14,7 +14,10 @@ QList<QPair<QString, QString> > sensorInfo()
     foreach (QByteArray sensorname, QSensor::sensorTypes()) {
         valuelist << QString(sensorname);
     }
-    if (!valuelist.isEmpty())  info.append(QPair<QString,QString>("Sensors", valuelist.join(", ")));
+    if (!valuelist.isEmpty())
+        info.append(QPair<QString,QString>("Sensors", valuelist.join(", ")));
+    else
+        info.append(QPair<QString,QString>("Sensors", "API present, no physical sensors detected"));
 
     return info;
 }

@@ -146,5 +146,6 @@ symbian: include(../qtinfo_symbianplatsec.pri)
 #}
 
 OTHER_FILES += \
-    ../android/AndroidManifest.xml
+    ../android/AndroidManifest.xml \
+    qt.conf
 
