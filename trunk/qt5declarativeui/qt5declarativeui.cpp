@@ -41,11 +41,15 @@ QWidget* declarativeUI(QList<QPair<QString, QString> > infoPairs, QObject* mainW
     view->rootContext()->setContextProperty("valueModel", QVariant::fromValue(values));
 //    view->rootContext()->setContextProperty("sectionModel", QVariant::fromValue(dataList));
 
-    view->setSource(QUrl::fromLocalFile("/usr/share/harbour-qtinfo/qml/main.qml"));
-    //    view->setSource(QUrl::fromLocalFile("/usr/share/harbour-qtinfo/qml/LoadingPage.qml"));
+#ifdef Q_OS_SAILFISH
+    view->setSource(QUrl::fromLocalFile(QString() + TARGETPATH + "../qml/main.qml"));
+            //    view->setSource(QUrl::fromLocalFile("/usr/share/harbour-qtinfo/qml/LoadingPage.qml"));
+#else
+    view->setSource(QUrl::fromLocalFile("../qml/main.qml"));
+#endif
 
     return retWidget;
-    return NULL;
+//    return NULL;
 }
 
 bool checkQml(QLatin1String qml)

@@ -61,17 +61,14 @@ unix:!symbian: {
     target.path = /opt/qtinfo/bin
     INSTALLS += target folder_01
 
-    packagesExist(sailfishapp) {
+    include(../sailfish.pri)
+    contains(SAILFISH,1): {
         folder_01.files = qml_sailfish/*
         folder_01.path = /usr/share/harbour-qtinfo/qml
-        target.path = /usr/share/harbour-qtinfo/bin
     }
 }
 
-android {
-    contains(QT_ARCH,i386): target.path = /libs/x86
-    contains(QT_ARCH,arm): target.path = /libs/armv7
-}
+android: include(../android.pri)
 
 
 OTHER_FILES += \

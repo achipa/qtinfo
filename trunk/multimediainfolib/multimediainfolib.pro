@@ -21,14 +21,9 @@ contains(QT_MAJOR_VERSION,5) {
     target.path = /opt/qtinfo/bin
     INSTALLS += target
 
-    packagesExist(sailfishapp) {
-        target.path = /usr/share/harbour-qtinfo/bin
-    }
+    include(../sailfish.pri)
 
-    android {
-        contains(QT_ARCH,i386): target.path = /libs/x86
-        contains(QT_ARCH,arm): target.path = /libs/armv7
-    }
+    android: include(../android.pri)
 
 } else {
     maemo5 {

@@ -4,5 +4,8 @@
         <file>qtquick10.qml</file>
         <file>qtquick11.qml</file>
         <file>qtquick20.qml</file>
+        <file>qtquick21.qml</file>
+        <file>qtquick22.qml</file>
+        <file>qtquick23.qml</file>
     </qresource>
 </RCC>

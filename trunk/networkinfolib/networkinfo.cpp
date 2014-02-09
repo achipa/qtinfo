@@ -11,7 +11,7 @@ QList<QPair<QString, QString> > networkInfo()
 
     QStringList valuelist;
     info.append(QPair<QString,QString>("section", "Networking"));
-    info.append(QPair<QString,QString>("Host / Domain", QHostInfo::localHostName() + " / " + QHostInfo::localDomainName()));
+//    info.append(QPair<QString,QString>("Host / Domain", QHostInfo::localHostName() + " / " + QHostInfo::localDomainName()));
     info.append(QPair<QString,QString>("SSL support", (QSslSocket::supportsSsl() ? "YES" : "NO")));
     foreach (QNetworkInterface qni, QNetworkInterface::allInterfaces () ) {
         if (!qni.addressEntries().isEmpty())

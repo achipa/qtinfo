@@ -18,4 +18,4 @@ QList<QPair<QString, QString> > GLInfo();
 }
 #endif
 
-#endif GLINFO_H
+#endif // GLINFO_H

@@ -35,9 +35,9 @@ MainWindow::~MainWindow()
 QWidget* MainWindow::loadWidget(QString library, const char* function)
 {
     typedef QWidget* (*fn)(QList<QPair<QString, QString> >, QObject*);
-#if Q_OS_SAILFISH
+#ifdef Q_OS_SAILFISH
         // due to Harbour policies...
-    fn v = (fn) QLibrary::resolve(infoloader->loadLib("/usr/share/harbour-qtinfo/bin/"+library), function);
+    fn v = (fn) QLibrary::resolve(infoloader->loadLib(TARGETPATH+library), function);
 #else
     fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/"+library), function);
 #endif
@@ -55,7 +55,7 @@ bool MainWindow::callBoolFunction(QString library, const char *function)
     fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/lib"+library), function);
 #elif Q_OS_SAILFISH
         // due to Harbour policies...
-    fn v = (fn) QLibrary::resolve(infoloader->loadLib("/usr/share/harbour-qtinfo/bin/"+library), function);
+    fn v = (fn) QLibrary::resolve(infoloader->loadLib(TARGETPATH + library), function);
 #else
     fn v = (fn) QLibrary::resolve(infoloader->loadLib(qApp->applicationDirPath()+"/"+library), function);
 #endif

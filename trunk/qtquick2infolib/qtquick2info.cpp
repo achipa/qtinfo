@@ -8,6 +8,12 @@
 QString qtQuickVersion()
 {
     QQuickView view;
+    view.setSource(QUrl("qrc:///qml/qtquick23.qml"));
+    if (view.status() == QQuickView::Ready && view.errors().length() == 0) return "2.3";
+    view.setSource(QUrl("qrc:///qml/qtquick22.qml"));
+    if (view.status() == QQuickView::Ready && view.errors().length() == 0) return "2.2";
+    view.setSource(QUrl("qrc:///qml/qtquick21.qml"));
+    if (view.status() == QQuickView::Ready && view.errors().length() == 0) return "2.1";
     view.setSource(QUrl("qrc:///qml/qtquick20.qml"));
     if (view.status() == QQuickView::Ready && view.errors().length() == 0) return "2.0";
     view.setSource(QUrl("qrc:///qml/qtquick11.qml"));

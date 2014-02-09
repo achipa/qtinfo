@@ -33,9 +33,9 @@ qnx {
 
 }
 
-android {
-    QT += opengl declarative quick sql multimedia qml
-}
+#android {
+#    QT += opengl declarative quick sql multimedia qml
+#}
 
 symbian {
     TARGET.EPOCSTACKSIZE = 0x14000
@@ -83,7 +83,8 @@ unix:!symbian { # not funny
 #    INSTALLS += desktopfile icon target
 }
 
-packagesExist(sailfishapp) {
+include(../sailfish.pri)
+contains(SAILFISH,1): {
     message(SailfishOS build)
     TARGET = harbour-qtinfo
 
@@ -98,7 +99,7 @@ packagesExist(sailfishapp) {
     INSTALLS -= desktop
 
     # This gets ignored. WTF
-    target.path = /usr/share/$${TARGET}/bin
+#    target.path = /usr/share/$${TARGET}/bin
 
     # If called icon, it also gets ignored
     hicon.files = $${TARGET}.png
@@ -106,9 +107,6 @@ packagesExist(sailfishapp) {
 
     desktopfile.files = $${TARGET}.desktop
     desktopfile.path =  /usr/share/applications
-
-    DEFINES += Q_OS_SAILFISH
-
 
 
     # QML files and folders

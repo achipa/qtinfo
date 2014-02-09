@@ -75,9 +75,5 @@ unix:!symbian { # not funny
     }
 }
 
-android {
-    contains(QT_ARCH,i386): target.path = /libs/x86
-    contains(QT_ARCH,arm): target.path = /libs/armv7
-}
 
 include(../qtinfo_symbianplatsec.pri)

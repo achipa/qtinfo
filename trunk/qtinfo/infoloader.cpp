@@ -399,8 +399,12 @@ QString InfoLoader::loadLib(QString libname)
     QTextStream sout(stdout);
     sout << lib.errorString() << endl;
 //    qDebug() << lib.errorString();
-    if (!lib.load()) { // FIXME Add Android dir only on Android
-        foreach (QString prefix, QStringList() << "" << "lib" << "/data/local/tmp/qt/lib/lib") {
+    if (!lib.load()) {
+        QStringList prefixlist = QStringList() << "" << "lib";
+#ifdef Q_OS_ANDROID
+        prefixlist << "/data/local/tmp/qt/lib/lib";
+#endif
+        foreach (QString prefix, prefixlist) {
             foreach(QString version, QStringList() << "" << "1" << "2" << "3" << "4" << "5") {
                 lib.setFileNameAndVersion(prefix + libname, version.toInt()); // Linux naming
                 if (lib.load()) break;
@@ -436,7 +440,7 @@ void InfoLoader::loadInfo(QString key, QString libname, QString libfile, const c
         QString libname(loadLib("app/native/lib"+libfile+".so")); // hmm... might need to include ./ as one of the possible prefixes ?
 #elif Q_OS_SAILFISH
         // due to Harbour policies...
-        QString libname(loadLib("/usr/share/harbour-qtinfo/bin/lib"+libfile+".so")); // hmm... might need to include ./ as one of the possible prefixes ?
+        QString libname(loadLib(QString() + TARGETPATH+"lib"+libfile+".so")); // hmm... might need to include ./ as one of the possible prefixes ?
 #else
         QString libname(loadLib(qApp->applicationDirPath()+"/"+libfile)); // hmm... might need to include ./ as one of the possible prefixes ?
 #endif
