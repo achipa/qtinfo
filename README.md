@@ -1,10 +1,15 @@
 QtInfo
 ======
 
-Display basic Qt-related information in an easy-to-report-to-developer way. It is *NOT* a hardware-info tool, nor does it try to display information that is not available via Qt APIs
+QtInfo has two main goals:
 
-Platforms known to run QtInfo in some shape or form (see screenshots below), in reverse order of appearance:  
+1. Display basic Qt-related information in an easy-to-report-to-developer way. It is *NOT* a hardware-info tool, nor does it try to display information that is not available via Qt APIs
 
+2. Demonstrate how to dynamically detect available functionality to address a fragmented deployment base (optimize for best available featureset instead of lowest common denominator). It's not about having an elegant #WorksForMe, it's about #WhatEverItTakes to run on as many Qt platforms as possible.
+
+Platforms known to run or ran QtInfo in some shape or form (see screenshots below), in reverse order of appearance:  
+
+ - (Windows Phone - Work in progress, waiting for Qt 5.3)
  - Android
  - SailfishOS
  - BlackberryOS 10
@@ -13,7 +18,7 @@ Platforms known to run QtInfo in some shape or form (see screenshots below), in 
  - Symbian^3
  - MacOS X
  - Windows
- - Maemo
+ - Maemo 5
  - Linux
 
 Qt 4.5 needs to be installed for the application to work. For a declarative UI, Qt 4.7 or better is needed. QtInfo has (preliminary) Qt5 support, but unlike the rest of the libraries, it is not runtime-detected yet (the plan is to have dual binaries eventually).  
@@ -50,6 +55,7 @@ Channels supported for relaying the info:
 
 Screenshots or it didn't happen:  
 
+![Android](/bin/screenshots/qtinfo_android_low.png)
 ![Sailfish](/bin/screenshots/sailfish-qtinfo.png)
 ![Blackberry10](/bin/screenshots/IMG_00000020.png)
 ![Harmattan](/bin/screenshots/harmattan.png)
